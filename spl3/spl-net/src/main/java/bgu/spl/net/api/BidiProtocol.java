@@ -3,17 +3,18 @@ package bgu.spl.net.api;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 
-public class BidiProtocol<T> implements BidiMessagingProtocol {
+public class BidiProtocol<T> implements BidiMessagingProtocol<T> {
 
     private T arg;
 
+
     @Override
-    public void start(int connectionId, Connections connections) {
+    public void start(int connectionId, Connections<T> connections) {
 
     }
 
     @Override
-    public void process(Object message) {
+    public void process(T message) {
 
     }
 

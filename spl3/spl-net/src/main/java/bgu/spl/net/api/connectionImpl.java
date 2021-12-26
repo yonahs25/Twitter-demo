@@ -5,17 +5,19 @@ import bgu.spl.net.api.bidi.Connections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class connectionImpl<T> implements Connections {
+public class connectionImpl<T> implements Connections<T> {
 
-    private ConcurrentHashMap<Integer, Integer> users; //TODO check this shit 2nd is connection handler
+    private ConcurrentHashMap<T, Integer> users; //TODO check this shit 2nd is connection handler
     private ConcurrentLinkedDeque<Object> messagesLog; //TODO check!
+
+
     @Override
-    public boolean send(int connectionId, Object msg) {
+    public boolean send(int connectionId, T msg) {
         return false;
     }
 
     @Override
-    public void broadcast(Object msg) {
+    public void broadcast(T msg) {
 
     }
 
@@ -24,3 +26,4 @@ public class connectionImpl<T> implements Connections {
 
     }
 }
+
