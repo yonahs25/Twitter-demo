@@ -7,7 +7,8 @@
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +51,7 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Application.NewsFeedClientMain">
+  <component name="RunManager" selected="Application.EchoClient">
     <configuration name="EchoClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="bgu.spl.net.impl.echo.EchoClient" />
       <module name="spl-net" />
@@ -92,9 +93,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NewsFeedClientMain" />
         <item itemvalue="Application.NewsFeedServerMain" />
         <item itemvalue="Application.EchoClient" />
+        <item itemvalue="Application.NewsFeedClientMain" />
       </list>
     </recent_temporary>
   </component>
@@ -110,6 +111,7 @@
       <workItem from="1640523586106" duration="70000" />
       <workItem from="1640523919134" duration="2538000" />
       <workItem from="1640536554969" duration="8343000" />
+      <workItem from="1640595862398" duration="1703000" />
     </task>
     <servers />
   </component>
