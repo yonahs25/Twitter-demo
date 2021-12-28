@@ -4,26 +4,102 @@ import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
-public class BidiProtocol<T> implements BidiMessagingProtocol<T> {
+import java.util.LinkedList;
+
+public class BidiProtocol implements BidiMessagingProtocol<String> {
 
 
     private ConnectionHandler mine;
     private connectionImpl connections;
-    private T arg;
+    private String arg;
 
 
     @Override
-    public void start(int connectionId, Connections<T> connections) {
-        
+    public void start(int connectionId, Connections<String> connections) {
+
 
     }
 
     @Override
-    public void process(T message) {
-        // get 2 first bytes as string
-        int x = 1;
-        switch (x){
-            case (01):
+    public void process(String message)
+    {
+        // need to break the message to parameters
+        int start = 0;
+        int end = 0;
+        int temp=0;
+        String opcode;
+        String username;
+        String password;
+        String birthday;
+        String captcha;
+        String followUnfollow;
+        String content;
+        String dateAndTime;
+        LinkedList<String> parameters = new LinkedList<String>();
+
+        while(message.charAt(end) != ';')
+        {
+            if (message.charAt(end) == ' ' || message.charAt(end) == ';')
+            {
+                parameters.add(message.substring(start, end));
+                end++;
+                start = end;
+            }
+            else
+            {
+                end++;
+            }
+        }
+
+        opcode = parameters.get(0);
+
+        switch (opcode)
+        {
+            case ("01"):
+                 username = parameters.get(1);
+                 password = parameters.get(2);
+                 birthday = parameters.get(3);
+
+                break;
+
+            case ("02"):
+                 username = parameters.get(1);
+                 password = parameters.get(2);
+                 captcha = parameters.get(3);
+
+                break;
+
+            case ("03"):
+
+                break;
+
+            case ("04"):
+                followUnfollow = parameters.get(1);
+                username = parameters.get(2);
+
+                break;
+
+            case ("05"):
+                content = parameters.get(1);
+
+                break;
+
+
+            case ("06"):
+                username = parameters.get(1);
+                content = parameters.get(2);
+                dateAndTime = parameters.get(3);
+
+                break;
+
+            case ("07"):
+
+                break;
+
+            case ("08"):
+                String listOfUsernames = parameters.get(1);
+                break;
+
         }
 
     }
