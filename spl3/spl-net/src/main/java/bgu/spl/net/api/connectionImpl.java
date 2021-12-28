@@ -11,8 +11,6 @@ public class connectionImpl<T> implements Connections<T> {
     private ConcurrentHashMap<Integer, ConnectionHandler> IdToConnectionHandler = new ConcurrentHashMap<>();
     private ConcurrentLinkedDeque<Object> messagesLog; //TODO check!
     private ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
-
-
     private static class singeltonHolder
     {
         private static connectionImpl instance = new connectionImpl<>();
@@ -34,6 +32,7 @@ public class connectionImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
+        IdToConnectionHandler.remove(connectionId);
 
     }
     public boolean register (User user){
@@ -52,5 +51,7 @@ public class connectionImpl<T> implements Connections<T> {
     {
         return usernameToUserImpl.get(username);
     }
+
+
 }
 

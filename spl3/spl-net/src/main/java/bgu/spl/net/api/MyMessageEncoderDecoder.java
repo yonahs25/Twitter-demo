@@ -32,6 +32,7 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         if (len >= bytes.length) {
             bytes = Arrays.copyOf(bytes, len * 2);
         }
+        if (nextByte == 0)
 
         bytes[len++] = nextByte;
     }
