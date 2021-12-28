@@ -78,7 +78,14 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                  if(connections.findUser(username) != -1)
                  {
                     User user = connections.getUser(username);
+                    if(user.getPassword() != password)
+                    {
 
+                    }
+                    else
+                    {
+                        // error message
+                    }
                  }
                  else
                  {
