@@ -34,5 +34,12 @@ public class connectionImpl<T> implements Connections<T> {
     public void putHandler(){
 
     }
+
+    public int findUser(String user){
+
+
+
+        return -1;
+    }
 }
 
