@@ -27,8 +27,8 @@ public class connectionImpl<T> implements Connections<T> {
     public void disconnect(int connectionId) {
 
     }
-    public boolean register (String id, String password, int age){
-
+    public boolean register (User user){
+        usernameToUserImpl.put(user.getUsername(),user);
         return true;
     }
     public void putHandler(){
@@ -36,10 +36,12 @@ public class connectionImpl<T> implements Connections<T> {
     }
 
     public int findUser(String user){
-
-
-
         return -1;
+    }
+
+    public User getUser(String username)
+    {
+        return usernameToUserImpl.get(username);
     }
 }
 

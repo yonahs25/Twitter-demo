@@ -14,17 +14,34 @@ public class User {
     private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
     private String username;
     private String password;
+    private String birthDay;
     private int age;
     private int ID;
     private int amountOfPosts = 0;
 
-    public User(String username, String password, int age) {
+    public User(String username, String password, String birthDay) {
         this.username = username;
         this.password = password;
-        this.age = age;
+        this.birthDay = birthDay;
+        age = calculateAge(birthDay);
     }
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;
+    }
+    private int calculateAge(String birthDay){
+        // TODO calculateAge
+        return 0;
+    }
+    public int getAge(){
+        return age;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

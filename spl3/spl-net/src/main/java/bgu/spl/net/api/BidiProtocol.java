@@ -59,6 +59,15 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                  username = parameters.get(1);
                  password = parameters.get(2);
                  birthday = parameters.get(3);
+                 if(connections.findUser(username) != -1)
+                 {
+                     User user = new User(username,password,birthday);
+                    connections.register(user);
+                 }
+                 else
+                 {
+                    // error message
+                 }
 
                 break;
 
@@ -66,6 +75,15 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                  username = parameters.get(1);
                  password = parameters.get(2);
                  captcha = parameters.get(3);
+                 if(connections.findUser(username) != -1)
+                 {
+                    User user = connections.getUser(username);
+
+                 }
+                 else
+                 {
+                     // error message
+                 }
 
                 break;
 
