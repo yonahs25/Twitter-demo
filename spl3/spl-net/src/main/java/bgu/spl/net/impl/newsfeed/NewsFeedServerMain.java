@@ -13,18 +13,18 @@ public class NewsFeedServerMain {
 
 // you can use any server...
 
-//        Server.threadPerClient(
-//                7777, //port
-//                () -> new RemoteCommandInvocationProtocol<>(feed), //protocol factory
-//                ObjectEncoderDecoder::new //message encoder decoder factory
-//        ).serve();
-
-        Server.reactor(
-                Runtime.getRuntime().availableProcessors(),
+        Server.threadPerClient(
                 7777, //port
-                () ->  new RemoteCommandInvocationProtocol<>(feed), //protocol factory
+                () -> new RemoteCommandInvocationProtocol<>(feed), //protocol factory
                 ObjectEncoderDecoder::new //message encoder decoder factory
         ).serve();
+
+//        Server.reactor(
+//                Runtime.getRuntime().availableProcessors(),
+//                7777, //port
+//                () ->  new RemoteCommandInvocationProtocol<>(feed), //protocol factory
+//                ObjectEncoderDecoder::new //message encoder decoder factory
+//        ).serve();
 
 
 //        Server.threadPerClient(

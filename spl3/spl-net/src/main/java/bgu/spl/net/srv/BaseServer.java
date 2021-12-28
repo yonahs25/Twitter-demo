@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 
 public abstract class BaseServer<T> implements Server<T> {
 
+
+    private int ID = 0;
     private final int port;
     private final Supplier<MessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> encdecFactory;
@@ -40,7 +42,8 @@ public abstract class BaseServer<T> implements Server<T> {
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler<>(
                         clientSock,
                         encdecFactory.get(),
-                        protocolFactory.get());
+                        protocolFactory.get(),
+                        ID++);
 
                 execute(handler);
             }
