@@ -13,6 +13,15 @@ public class connectionImpl<T> implements Connections<T> {
     private ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
 
 
+    private static class singeltonHolder
+    {
+        private static connectionImpl instance = new connectionImpl<>();
+    }
+    public static connectionImpl getInstance()
+    {
+        return singeltonHolder.instance;
+    }
+
     @Override
     public boolean send(int connectionId, T msg) {
         return false;
