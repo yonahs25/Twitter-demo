@@ -31,5 +31,8 @@ public class connectionImpl<T> implements Connections<T> {
 
         return true;
     }
+    public void putHandler(){
+
+    }
 }
 

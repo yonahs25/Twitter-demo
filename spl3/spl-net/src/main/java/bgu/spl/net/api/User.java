@@ -1,8 +1,14 @@
 package bgu.spl.net.api;
 
+import bgu.spl.net.srv.bidi.ConnectionHandler;
+
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class User {
+
+    private ConnectionHandler connectionHandler;
+
+
 
     private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
@@ -16,5 +22,9 @@ public class User {
         this.username = username;
         this.password = password;
         this.age = age;
+    }
+
+    public void setConnectionHandler(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
     }
 }
