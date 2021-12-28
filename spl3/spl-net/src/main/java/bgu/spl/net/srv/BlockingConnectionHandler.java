@@ -4,6 +4,7 @@ import bgu.spl.net.api.BidiProtocol;
 import bgu.spl.net.api.MessageEncoderDecoder;
 import bgu.spl.net.api.MessagingProtocol;
 import bgu.spl.net.api.User;
+import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.io.BufferedInputStream;
@@ -15,14 +16,14 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     private User user = null;
     private final int id;
-    private final MessagingProtocol<T> protocol;
+    private final BidiMessagingProtocol<T> protocol;
     private final MessageEncoderDecoder<T> encdec;
     private final Socket sock;
     private BufferedInputStream in;
     private BufferedOutputStream out;
     private volatile boolean connected = true;
 
-    public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, MessagingProtocol<T> protocol, int id) {
+    public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, BidiMessagingProtocol<T> protocol, int id) {
         this.sock = sock;
         this.encdec = reader;
         this.protocol = protocol;
@@ -40,7 +41,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
 
             in = new BufferedInputStream(sock.getInputStream());
-            out = new BufferedOutputStream(sock.getOutputStream());
+//            out = new BufferedOutputStream(sock.getOutputStream());
 
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
                 T nextMessage = encdec.decodeNextByte((byte) read);
@@ -62,6 +63,16 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     @Override
     public void send(T msg) {
+        try (Socket sock = this.sock){
+            out = new BufferedOutputStream(sock.getOutputStream());
+
+            out.write(encdec.encode(msg));
+            out.flush();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

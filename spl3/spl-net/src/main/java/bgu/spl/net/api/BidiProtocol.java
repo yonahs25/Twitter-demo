@@ -7,9 +7,9 @@ import bgu.spl.net.srv.bidi.ConnectionHandler;
 public class BidiProtocol<T> implements BidiMessagingProtocol<T> {
 
 
-//    private ConnectionHandler mine;
+    private ConnectionHandler mine;
     private connectionImpl connections;
-//    private T arg;
+    private T arg;
 
 
     @Override
