@@ -15,6 +15,7 @@ public class User {
     private String username;
     private String password;
     private String birthDay;
+    private boolean connected;
     private int age;
     private int ID;
     private int amountOfPosts = 0;
@@ -24,6 +25,7 @@ public class User {
         this.password = password;
         this.birthDay = birthDay;
         age = calculateAge(birthDay);
+        connected = false;
     }
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
@@ -43,5 +45,17 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isConected() {
+        return connected;
+    }
+
+    public void setConected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public void addFolower(User user){
+
     }
 }

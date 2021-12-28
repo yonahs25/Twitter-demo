@@ -78,13 +78,14 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                  if(connections.findUser(username) != -1)
                  {
                     User user = connections.getUser(username);
-                    if(user.getPassword() != password)
+                    // TODO maybe connected is problem with a few threads
+                    if(user.getPassword() != password || user.isConected() || Integer.parseInt(captcha) != 1)
                     {
-
+                        // error message
                     }
                     else
                     {
-                        // error message
+                        //need to login
                     }
                  }
                  else
@@ -101,7 +102,14 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             case ("04"):
                 followUnfollow = parameters.get(1);
                 username = parameters.get(2);
+                if(mine.getUser() != null)
+                {
+                    // the user is loged in
+                }
+                else
+                {
 
+                }
                 break;
 
             case ("05"):
