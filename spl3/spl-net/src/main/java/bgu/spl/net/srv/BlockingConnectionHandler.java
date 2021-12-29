@@ -14,7 +14,7 @@ import java.net.Socket;
 
 public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler<T> {
 
-    private User user = null;
+    private User user = null; //TODO remove this
     private final int id;
     private final BidiMessagingProtocol<T> protocol;
     private final MessageEncoderDecoder<T> encdec;
@@ -30,6 +30,8 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
         this.id=id;
     }
 
+
+    // TODO remove this
     public void setUser(User user) {
         this.user = user;
     }
@@ -38,6 +40,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
             int read;
+
 
 
             in = new BufferedInputStream(sock.getInputStream());

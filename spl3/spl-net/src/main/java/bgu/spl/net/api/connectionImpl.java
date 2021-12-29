@@ -12,6 +12,7 @@ public class connectionImpl<T> implements Connections<T> {
     private ConcurrentHashMap<Integer, ConnectionHandler> idToConnectionHandler = new ConcurrentHashMap<>();
     private ConcurrentLinkedDeque<T> messagesLog; //TODO check!
     private ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, User> idToUser = new ConcurrentHashMap<>();
     private static class singeltonHolder
     {
         private static connectionImpl instance = new connectionImpl<>();
@@ -35,10 +36,6 @@ public class connectionImpl<T> implements Connections<T> {
     public void disconnect(int connectionId) {
         idToConnectionHandler.remove(connectionId);
     }
-    public boolean register (User user){
-        usernameToUserImpl.putIfAbsent(user.getUsername(),user);
-        return true;
-    }
 
 
     // adds handler to hashmap
@@ -47,6 +44,8 @@ public class connectionImpl<T> implements Connections<T> {
 
     }
 
+
+    // ------------------------------------ helper functions -------------------------
     // meant to check if some1 is logged in to user
     public int findIdFromUser(String username){
         User user = getUser(username);
@@ -60,6 +59,46 @@ public class connectionImpl<T> implements Connections<T> {
     public User getUser(String username)
     {
         return usernameToUserImpl.getOrDefault(username,null);
+    }
+
+
+
+    // ------------------------------------ Op Functions ------------------------------------------
+    public boolean register (User user){
+        usernameToUserImpl.putIfAbsent(user.getUsername(),user);
+        return true;
+    }
+
+
+    public void login(int id, User user) {
+        idToUser.putIfAbsent(id, user);
+    }
+
+    public boolean logout(int id) {
+        User myUser = idToUser.get(id);
+        if (myUser == null)
+            return false;
+        else {
+            myUser.setConnectedHandlerID(-1);
+            idToUser.remove(id);
+            return true;
+        }
+    }
+
+
+    public boolean followOrUn(int myID, String username, String followOrUn) {
+        User user = usernameToUserImpl.get(username);
+        User myUser = idToUser.get(myID);
+        if (user == null || myUser == null) {
+            return false;
+        }
+        switch (followOrUn){
+            // follow case
+            case ("0"):
+
+        }
+
+        return false;
     }
 
 
