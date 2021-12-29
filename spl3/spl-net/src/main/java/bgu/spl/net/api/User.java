@@ -62,9 +62,6 @@ public class User {
        return connectedHandlerID.get() != -1;
     }
 
-    public void addFolower(User user){
-    }
-
     public ConnectionHandler getConnectionHandler() {
         return connectionHandler;
     }
