@@ -30,6 +30,7 @@ public class connectionImpl<T> implements Connections<T> {
     @Override
     public void broadcast(T msg) {
 
+
     }
 
     @Override
@@ -87,19 +88,36 @@ public class connectionImpl<T> implements Connections<T> {
 
 
     public boolean followOrUn(int myID, String username, String followOrUn) {
-        User user = usernameToUserImpl.get(username);
+        User otherUser = usernameToUserImpl.get(username);
         User myUser = idToUser.get(myID);
-        if (user == null || myUser == null) {
+        if (otherUser == null || myUser == null) {
             return false;
         }
-        switch (followOrUn){
-            // follow case
-            case ("0"):
+        //switch (followOrUn){
 
+        //  case ("0"):
 
+        // follow case
+        if(followOrUn.equals("0")){
+            if (myUser.getFollowing().contains(otherUser) || //im already following the other user
+                    myUser.getBlockedUsers().contains(otherUser)|| //my user blocked the other user
+                    otherUser.getBlockedUsers().contains(myUser)) //other user blocked my user
+                return false;
+            else {
+                myUser.addFollower(otherUser);
+                otherUser.addFollowing(myUser);
+                return true;
+            }
+        // unfollow case
+        }else {
+            if (!myUser.getFollowing().contains(otherUser))
+                return false;
+            else{
+                myUser.removeFollowing(otherUser);
+                otherUser.removerFollower(myUser);
+                return true;
+            }
         }
-
-        return false;
     }
 
 

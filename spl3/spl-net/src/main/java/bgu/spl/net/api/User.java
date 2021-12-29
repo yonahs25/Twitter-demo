@@ -13,6 +13,7 @@ public class User {
     private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<User> blockedUsers = new ConcurrentLinkedDeque<>();
+    private ConcurrentLinkedDeque<String> pendingMessages = new ConcurrentLinkedDeque<>();
     private String username;
     private String password;
     private String birthDay;
@@ -88,4 +89,11 @@ public class User {
     public void addFollowing(User user){
         following.add(user);
     }
+
+    public void removerFollower(User user) {followers.remove(user);}
+
+    public void removeFollowing(User user) {following.remove(user);}
+
+    public void addToPendingMessages (String message) {pendingMessages.add(message);}
+
 }
