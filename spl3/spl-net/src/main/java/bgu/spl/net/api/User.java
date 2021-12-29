@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class User {
 
     private ConnectionHandler connectionHandler;
-
+    private int connectedHandlerID;
 
 
     private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
@@ -26,6 +26,16 @@ public class User {
         this.birthDay = birthDay;
         age = calculateAge(birthDay);
         connected = false;
+        connectionHandler=null;
+        connectedHandlerID = -1 ;
+    }
+
+    public int getConnectedHandlerID() {
+        return connectedHandlerID;
+    }
+
+    public void setConnectedHandlerID(int connectedHandlerID) {
+        this.connectedHandlerID = connectedHandlerID;
     }
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
@@ -56,6 +66,10 @@ public class User {
     }
 
     public void addFolower(User user){
-
     }
+
+    public ConnectionHandler getConnectionHandler() {
+        return connectionHandler;
+    }
+
 }
