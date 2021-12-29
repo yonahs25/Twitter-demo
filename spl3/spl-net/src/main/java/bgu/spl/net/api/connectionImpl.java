@@ -96,6 +96,7 @@ public class connectionImpl<T> implements Connections<T> {
             // follow case
             case ("0"):
 
+
         }
 
         return false;

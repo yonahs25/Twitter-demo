@@ -123,7 +123,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             }
             else
             {
-                connections.login(user);
+                connections.login(connectionHendlerId, user);
                 user.setConnectedHandlerID(connectionHendlerId);
             }
         }
@@ -150,7 +150,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     private void followUnfollow(String followOrUnfollow , String username)
     {
 
-        boolean ans = connections.follow(connectionHendlerId,username,Integer.parseInt(followOrUnfollow));
+        boolean ans = connections.followOrUn(connectionHendlerId,username,followOrUnfollow);
     }
 
 

@@ -69,6 +69,23 @@ public class User {
     }
 
 
+    public ConcurrentLinkedDeque<User> getFollowers() {
+        return followers;
+    }
 
+    public ConcurrentLinkedDeque<User> getFollowing() {
+        return following;
+    }
 
+    public ConcurrentLinkedDeque<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void addFollower (User user){
+        followers.add(user);
+    }
+
+    public void addFollowing(User user){
+        following.add(user);
+    }
 }
