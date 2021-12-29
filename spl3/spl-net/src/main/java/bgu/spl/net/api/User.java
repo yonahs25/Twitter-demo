@@ -97,5 +97,11 @@ public class User {
 
     public void addToPendingMessages (String message) {pendingMessages.add(message);}
 
+    public void incrementPostsCount() {amountOfPosts++;}
+
+    public String getData() {
+        return (age + " " + amountOfPosts + " " + followers.size() + " " + following.size());
+    }
+
 
 }

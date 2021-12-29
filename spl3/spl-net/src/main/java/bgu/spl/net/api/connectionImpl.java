@@ -2,17 +2,16 @@ package bgu.spl.net.api;
 
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
-
-import java.net.IDN;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class connectionImpl<T> implements Connections<T> {
 
-    private ConcurrentHashMap<Integer, ConnectionHandler> idToConnectionHandler = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, ConnectionHandler<T>> idToConnectionHandler = new ConcurrentHashMap<>();
     private ConcurrentLinkedDeque<T> messagesLog; //TODO check!
-    private ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer, User> idToUser = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, User> idToUser = new ConcurrentHashMap<>();
     private static class singeltonHolder
     {
         private static connectionImpl instance = new connectionImpl<>();
@@ -24,7 +23,12 @@ public class connectionImpl<T> implements Connections<T> {
 
     @Override
     public boolean send(int connectionId, T msg) {
-        return false;
+        ConnectionHandler<T> connectionHandler = idToConnectionHandler.get(connectionId);
+        if (connectionHandler==null)
+            return false;
+        connectionHandler.send(msg);
+        return true;
+
     }
 
     @Override
@@ -40,7 +44,7 @@ public class connectionImpl<T> implements Connections<T> {
 
 
     // adds handler to hashmap
-    public void putHandler(int id, ConnectionHandler handler){
+    public void putHandler(int id, ConnectionHandler<T> handler){
         idToConnectionHandler.putIfAbsent(id, handler);
 
     }
@@ -60,6 +64,10 @@ public class connectionImpl<T> implements Connections<T> {
     public User getUser(String username)
     {
         return usernameToUserImpl.getOrDefault(username,null);
+    }
+
+    public User getConnectedUser(int id) {
+        return idToUser.get(id);
     }
 
 
@@ -120,6 +128,26 @@ public class connectionImpl<T> implements Connections<T> {
         }
     }
 
+    public LinkedList<String> logStat (int id){
+
+        return new LinkedList<>();
+    }
+
+
+    //STAT call needs int id && LinkedList of String
+    public LinkedList<String> stat(int id, LinkedList<String> usernamesList){
+        if(idToUser.get(id) == null)
+            return null;
+        LinkedList<String> statsList = new LinkedList<>();
+        for (String username : usernamesList) {
+            User user = usernameToUserImpl.get(username);
+            if (user == null)
+                return null;
+            statsList.add(user.getData());
+        }
+
+        return statsList;
+    }
 
 }
 
