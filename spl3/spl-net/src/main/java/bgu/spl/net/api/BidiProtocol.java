@@ -4,6 +4,7 @@ import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class BidiProtocol implements BidiMessagingProtocol<String> {
@@ -24,22 +25,19 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     public void process(String message)
     {
         // need to break the message to parameters
-        int start = 0;
-        int end = 0;
-        int temp=0;
+        // TODO find a better way to make empty char
+        byte[] emptyByteArr = new byte[1];
+        String emptyString = new String(emptyByteArr,0,1, StandardCharsets.UTF_8);
+        char zeroChar = emptyString.charAt(0);
+        int start = 2;
+        int end = 2;
         String opcode;
-        String username;
-        String password;
-        String birthday;
-        String captcha;
-        String followUnfollow;
-        String content;
-        String dateAndTime;
         LinkedList<String> parameters = new LinkedList<String>();
+        opcode = message.substring(0,2);
 
         while(message.charAt(end) != ';')
         {
-            if (message.charAt(end) == ' ' || message.charAt(end) == ';')
+            if (message.charAt(end) == zeroChar || message.charAt(end) == ';')
             {
                 parameters.add(message.substring(start, end));
                 end++;
@@ -51,86 +49,41 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             }
         }
 
-        opcode = parameters.get(0);
-
         switch (opcode)
         {
             case ("01"):
-                 username = parameters.get(1);
-                 password = parameters.get(2);
-                 birthday = parameters.get(3);
-                 if(connections.findUser(username) != -1)
-                 {
-                     User user = new User(username,password,birthday);
-                    connections.register(user);
-                 }
-                 else
-                 {
-                    // error message
-                 }
-
+               register(parameters.get(0),parameters.get(1),parameters.get(2));
                 break;
 
             case ("02"):
-                 username = parameters.get(1);
-                 password = parameters.get(2);
-                 captcha = parameters.get(3);
-                 if(connections.findUser(username) != -1)
-                 {
-                    User user = connections.getUser(username);
-                    // TODO maybe connected is problem with a few threads
-                    if(user.getPassword() != password || user.isConected() || Integer.parseInt(captcha) != 1)
-                    {
-                        // error message
-                    }
-                    else
-                    {
-                        //need to login
-                    }
-                 }
-                 else
-                 {
-                     // error message
-                 }
-
+                login(parameters.get(0),parameters.get(1),parameters.get(2));
                 break;
 
             case ("03"):
-
+                logout();
                 break;
 
             case ("04"):
-                followUnfollow = parameters.get(1);
-                username = parameters.get(2);
-                if(mine.getUser() != null)
-                {
-                    // the user is loged in
-                }
-                else
-                {
+                followUnfollow(parameters.get(0),parameters.get(1));
 
-                }
                 break;
 
             case ("05"):
-                content = parameters.get(1);
+                post(parameters.get(0));
 
                 break;
 
-
             case ("06"):
-                username = parameters.get(1);
-                content = parameters.get(2);
-                dateAndTime = parameters.get(3);
+                pm(parameters.get(0),parameters.get(1),parameters.get(2));
 
                 break;
 
             case ("07"):
-
+                logstat();
                 break;
 
             case ("08"):
-                String listOfUsernames = parameters.get(1);
+                stat(parameters.get(0));
                 break;
 
         }
@@ -138,7 +91,78 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     }
 
     @Override
-    public boolean shouldTerminate() {
+    public boolean shouldTerminate()
+    {
         return false;
     }
+
+    private void register (String username,String password,String birthday)
+    {
+        if(connections.getUser(username) != null)
+        {
+            User user = new User(username,password,birthday);
+            connections.register(user);
+        }
+        else
+        {
+            // error message
+        }
+    }
+
+
+    private void login (String username, String password , String captcha)
+    {
+        User user = connections.getUser(username);
+        if(user != null)
+        {
+            // TODO maybe connected is problem with a few threads
+            if(user.getPassword() != password || user.isConected() || Integer.parseInt(captcha) != 1)
+            {
+                // error message
+            }
+            else
+            {
+                //need to login
+            }
+        }
+        else
+        {
+            // error message
+        }
+
+    }
+
+    private void logout()
+    {
+
+    }
+
+    private void followUnfollow(String followOrUnfollow , String username)
+    {
+        // TODO maybe replace void to string
+    }
+
+
+    private void post(String content)
+    {
+
+    }
+
+    private void pm(String username , String content , String dataAndTime)
+    {
+
+    }
+
+    private void logstat()
+    {
+
+    }
+
+    private void stat(String listOfUsernames)
+    {
+
+    }
+
+
+
 }
