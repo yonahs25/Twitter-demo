@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class BidiProtocol implements BidiMessagingProtocol<String> {
 
 
-    private ConnectionHandler mine;
+    private int connectionHendlerId;
     private connectionImpl connections;
     private String arg;
 
@@ -98,14 +98,16 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     private void register (String username,String password,String birthday)
     {
-        if(connections.getUser(username) != null)
+        User user = connections.getUser(username);
+        if(user == null)
         {
-            User user = new User(username,password,birthday);
-            connections.register(user);
+            User newUser = new User(username,password,birthday);
+            connections.register(newUser);
+            //TODO ack message for good registration
         }
         else
         {
-            // error message
+            //TODO error message
         }
     }
 
@@ -115,31 +117,40 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         User user = connections.getUser(username);
         if(user != null)
         {
-            // TODO maybe connected is problem with a few threads
-            if(user.getPassword() != password || user.isConected() || Integer.parseInt(captcha) != 1)
+            if(!user.getPassword().equals(password) || user.isConnected() || Integer.parseInt(captcha) != 1)
             {
-                // error message
+                //TODO error message
             }
             else
             {
-                //need to login
+                connections.login(user);
+                user.setConnectedHandlerID(connectionHendlerId);
             }
         }
         else
         {
-            // error message
+            //TODO error message
         }
 
     }
 
     private void logout()
     {
-
+        boolean ans = connections.logout(connectionHendlerId);
+        if(!ans)
+        {
+            //TODO error message
+        }
+        else
+        {
+         //TODO ack message
+        }
     }
 
     private void followUnfollow(String followOrUnfollow , String username)
     {
-        // TODO maybe replace void to string
+
+        boolean ans = connections.follow(connectionHendlerId,username,Integer.parseInt(followOrUnfollow));
     }
 
 

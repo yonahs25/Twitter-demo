@@ -3,21 +3,21 @@ package bgu.spl.net.api;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
 
     private ConnectionHandler connectionHandler;
-    private int connectedHandlerID;
-
-
+    //TODO make connctionhendlerid atomicinteger
+    private AtomicInteger connectedHandlerID;
     private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
+    private ConcurrentLinkedDeque<User> blockedUsers = new ConcurrentLinkedDeque<>();
     private String username;
     private String password;
     private String birthDay;
     private boolean connected;
     private int age;
-    private int ID;
     private int amountOfPosts = 0;
 
     public User(String username, String password, String birthDay) {
@@ -27,15 +27,15 @@ public class User {
         age = calculateAge(birthDay);
         connected = false;
         connectionHandler=null;
-        connectedHandlerID = -1 ;
+//        connectedHandlerID.compareAndSet(-1) ;
     }
 
     public int getConnectedHandlerID() {
-        return connectedHandlerID;
+        return connectedHandlerID.get();
     }
 
     public void setConnectedHandlerID(int connectedHandlerID) {
-        this.connectedHandlerID = connectedHandlerID;
+//        TODO
     }
 
     public void setConnectionHandler(ConnectionHandler connectionHandler) {
@@ -57,12 +57,8 @@ public class User {
         return password;
     }
 
-    public boolean isConected() {
-        return connected;
-    }
-
-    public void setConected(boolean connected) {
-        this.connected = connected;
+    public boolean isConnected() {
+       return connectedHandlerID.get() != -1;
     }
 
     public void addFolower(User user){
@@ -71,5 +67,8 @@ public class User {
     public ConnectionHandler getConnectionHandler() {
         return connectionHandler;
     }
+
+
+
 
 }
