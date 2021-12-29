@@ -3,13 +3,14 @@ package bgu.spl.net.api;
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
+import java.net.IDN;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class connectionImpl<T> implements Connections<T> {
 
-    private ConcurrentHashMap<Integer, ConnectionHandler> IdToConnectionHandler = new ConcurrentHashMap<>();
-    private ConcurrentLinkedDeque<Object> messagesLog; //TODO check!
+    private ConcurrentHashMap<Integer, ConnectionHandler> idToConnectionHandler = new ConcurrentHashMap<>();
+    private ConcurrentLinkedDeque<T> messagesLog; //TODO check!
     private ConcurrentHashMap<String,User> usernameToUserImpl = new ConcurrentHashMap<>();
     private static class singeltonHolder
     {
@@ -32,24 +33,33 @@ public class connectionImpl<T> implements Connections<T> {
 
     @Override
     public void disconnect(int connectionId) {
-        IdToConnectionHandler.remove(connectionId);
-
+        idToConnectionHandler.remove(connectionId);
     }
     public boolean register (User user){
-        usernameToUserImpl.put(user.getUsername(),user);
+        usernameToUserImpl.putIfAbsent(user.getUsername(),user);
         return true;
     }
-    public void putHandler(){
+
+
+    // adds handler to hashmap
+    public void putHandler(int id, ConnectionHandler handler){
+        idToConnectionHandler.putIfAbsent(id, handler);
 
     }
 
-    public int findUser(String user){
-        return -1;
+    // meant to check if some1 is logged in to user
+    public int findIdFromUser(String username){
+        User user = getUser(username);
+        if (user != null)
+            return user.getConnectedHandlerID();
+
+        return  -2;
     }
 
+    //returns user object with given username, returns null if there is no such username
     public User getUser(String username)
     {
-        return usernameToUserImpl.get(username);
+        return usernameToUserImpl.getOrDefault(username,null);
     }
 
 
