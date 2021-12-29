@@ -94,6 +94,11 @@ public class User {
 
     public void removeFollowing(User user) {following.remove(user);}
 
+    public ConcurrentLinkedDeque<String> getPendingMessages() {
+        return pendingMessages;
+    }
+
     public void addToPendingMessages (String message) {pendingMessages.add(message);}
+
 
 }
