@@ -6,6 +6,7 @@ import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class BidiProtocol implements BidiMessagingProtocol<String> {
 
@@ -125,6 +126,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             {
                 connections.login(connectionHendlerId, user);
                 user.setConnectedHandlerID(connectionHendlerId);
+                // need to send pending messages if the user loged in and have pending messages
             }
         }
         else
@@ -151,12 +153,84 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     {
 
         boolean ans = connections.followOrUn(connectionHendlerId,username,followOrUnfollow);
+        if(!ans)
+        {
+            //TODO error message
+        }
+        else
+        {
+            //TODO ack message
+        }
     }
 
 
     private void post(String content)
     {
+        // need to save posts to data structure in the server
+        byte[] emptyByteArr = new byte[1];
+        String emptyString = new String(emptyByteArr,0,1, StandardCharsets.UTF_8);
 
+        //increment number of posts
+//        int indexOfSpace = content.indexOf(" ");
+        User user = connections.getConnectedUser(connectionHendlerId);
+        if(user != null)
+        {
+            LinkedList<String> usersStrings = new LinkedList<String>();
+            int lastIndexOf = content.lastIndexOf("@");
+            int space = (content.substring(lastIndexOf)).indexOf(" ");
+            String cont = content.substring(space+1);
+            String users = content.substring(space);
+            boolean stop = false;
+            int index = 0;
+            while(!stop)
+            {
+                int indexOf = users.indexOf("@",index);
+                int indexOfSpace = users.indexOf(" ",indexOf);
+                if(indexOf == -1)
+                    stop = true;
+                else
+                {
+                    usersStrings.add(users.substring(indexOf,indexOfSpace));
+                    index = indexOf+1;
+                }
+            }
+            if (user.getConnectedHandlerID() != -1)
+            {
+                String messageString = "05" + "1" + user.getUsername() + emptyString + cont + emptyString;
+                ConcurrentLinkedDeque<User> followers = user.getFollowers();
+                for (User u : followers)
+                {
+                    int connectedId = u.getConnectedHandlerID();
+                    if (connectedId != -1)
+                    {
+                        connections.send(connectedId, messageString);
+                    }
+                    else
+                    {
+                        user.addToPendingMessages(messageString);
+                    }
+                }
+                for (String name : usersStrings)
+                {
+                    User user1 = connections.getUser(name);
+                    if (user1 != null)
+                    {
+                        int connectedId = user1.getConnectedHandlerID();
+                        if (connectedId != -1)
+                        {
+                            connections.send(connectedId, messageString);
+                        }
+                        else
+                        {
+                            user.addToPendingMessages(messageString);
+                        }
+                    }
+                }
+            else
+            {
+                // he is not loged in need to send error
+            }
+        }
     }
 
     private void pm(String username , String content , String dataAndTime)
