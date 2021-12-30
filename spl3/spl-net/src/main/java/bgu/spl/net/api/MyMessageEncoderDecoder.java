@@ -1,6 +1,7 @@
 package bgu.spl.net.api;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
@@ -25,6 +26,21 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
 
     @Override
     public byte[] encode(String message) {
+        if(message.substring(0,2).equals("10") && message.substring(2,4).equals("08")){
+            ArrayList<Byte> ans = new ArrayList<>();
+            byte[] x = message.substring(0,4).getBytes(StandardCharsets.UTF_8);
+            ArrayList<Byte> alwaysAdd = new ArrayList<>();
+            for (int i=0; i<x.length;i++)  alwaysAdd.add(x[i]);
+            ArrayList<Byte> toAdd = new ArrayList<>();
+            // need to change this, think yona think
+            byte[] one = shortToBytes(Short.parseShort(message.substring(4,6)));
+            byte[] two = shortToBytes(Short.parseShort(message.substring(6,8)));
+            byte[] three = shortToBytes(Short.parseShort(message.substring(8,10)));
+            byte[] four = shortToBytes(Short.parseShort(message.substring(10,12)));
+
+
+
+        }
         return (message + ";").getBytes(); //uses utf8 by default
     }
 
