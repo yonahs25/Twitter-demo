@@ -25,7 +25,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     @Override
     public void process(String message)
     {
-        // need to break the message to parameters
+
         // TODO find a better way to make empty char
         byte[] emptyByteArr = new byte[1];
         String emptyString = new String(emptyByteArr,0,1, StandardCharsets.UTF_8);
@@ -38,6 +38,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
         while(message.charAt(end) != ';')
         {
+            //TODO problem at opcode 8
             if (message.charAt(end) == zeroChar || message.charAt(end) == ';')
             {
                 parameters.add(message.substring(start, end));
@@ -66,17 +67,14 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             case ("04"):
                 followUnfollow(parameters.get(0),parameters.get(1));
-
                 break;
 
             case ("05"):
                 post(parameters.get(0));
-
                 break;
 
             case ("06"):
                 pm(parameters.get(0),parameters.get(1),parameters.get(2));
-
                 break;
 
             case ("07"):
@@ -190,47 +188,164 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     index = indexOf + 1;
                 }
             }
-            if (user.getConnectedHandlerID() != -1) {
+            if (user.getConnectedHandlerID() != -1)
+            {
                 String messageString = "05" + "1" + user.getUsername() + emptyString + cont + emptyString;
                 ConcurrentLinkedDeque<User> followers = user.getFollowers();
-                for (User u : followers) {
+                for (User u : followers)
+                {
                     int connectedId = u.getConnectedHandlerID();
-                    if (connectedId != -1) {
+                    if (connectedId != -1)
+                    {
                         connections.send(connectedId, messageString);
-                    } else {
+                    }
+                    else
+                    {
                         user.addToPendingMessages(messageString);
                     }
                 }
-                for (String name : usersStrings) {
+                for (String name : usersStrings)
+                {
                     User user1 = connections.getUser(name);
-                    if (user1 != null) {
+                    if (user1 != null)
+                    {
                         int connectedId = user1.getConnectedHandlerID();
-                        if (connectedId != -1) {
+                        if (connectedId != -1)
+                        {
                             connections.send(connectedId, messageString);
-                        } else {
+                        }
+                        else
+                        {
                             user.addToPendingMessages(messageString);
                         }
                     }
                 }
+            }
             else
-                {
-                    // he is not loged in need to send error
-                }
+            {
+                // error message
             }
         }
     }
     private void pm(String username , String content , String dataAndTime)
     {
+        //TODO check if there is a @ at the start of the username and remove it
+        User user = connections.getConnectedUser(connectionHendlerId);
+        if (user != null)
+        {
+            if(user.getConnectedHandlerID() != -1)
+            {
+                User receivingUser = connections.getUser(username);
+                if (receivingUser != null)
+                {
+                    //need to check the content
+                    // the user must follow the receivingUser
+                    ConcurrentLinkedDeque<User> followingList = user.getFollowers();
+                    if(!content.equals("") && followingList.contains(receivingUser))
+                    {
+                         //TODO save the pm message to a data structure
+                         // TODO need to filter the message
+                        String filteredContent = filter(content);
+                        if(receivingUser.getConnectedHandlerID() != -1)
+                        {
+                            connections.send(receivingUser.getConnectedHandlerID(),filteredContent);
+                        }
+                        else
+                        {
+                            receivingUser.addToPendingMessages(filteredContent);
+                        }
+                    }
+                    else
+                    {
+                        // error message
+                    }
+                }
+                else
+                {
+                    //error message
+                }
+            }
+            else
+            {
+                // error message
+            }
+        }
 
     }
 
     private void logstat()
     {
-
+        User user = connections.getConnectedUser(connectionHendlerId);
+        if(user != null && user.getConnectedHandlerID() != -1)
+        {
+            LinkedList<String> logStatList = connections.logStat(connectionHendlerId);
+            String returnString;
+            for(int i = 0; i < logStatList.size()-1; i++)
+            {
+                 returnString = "07" + logStatList.get(i) +"\n";
+            }
+            returnString = "07" + logStatList.get(logStatList.size()-1);
+            connections.send(connectionHendlerId,returnString);
+        }
+        else
+        {
+            // error messgae
+        }
     }
 
     private void stat(String listOfUsernames)
     {
+        User user = connections.getConnectedUser(connectionHendlerId);
+        if(user != null && user.getConnectedHandlerID() != -1)
+        {
+            LinkedList<String> userNames = new LinkedList<>();
+            int index = 0;
+            boolean stop = false;
+            while (!stop)
+            {
+                int needToBeFound = listOfUsernames.indexOf("|",index);
+                if(needToBeFound != -1)
+                {
+                    String username = listOfUsernames.substring(index,needToBeFound);
+                    userNames.add(username);
+                    index = needToBeFound+1;
+                }
+                else
+                {
+                    stop = true;
+                }
+
+            }
+            LinkedList<String> stat = connections.stat(connectionHendlerId,userNames);
+            for(int i = 0 ; i < userNames.size(); i++)
+            {
+                User receivingUser = connections.getUser(userNames.get(i));
+                if(receivingUser != null)
+                {
+                    // TODO ack opcode at the beginning of the string
+                    String message = "ack opcode" + "08" + stat.get(i);
+                    if (receivingUser.getConnectedHandlerID() != -1)
+                    {
+                        connections.send(receivingUser.getConnectedHandlerID(),message);
+                    }
+                    else
+                    {
+                        receivingUser.addToPendingMessages(message);
+                    }
+                }
+            }
+        }
+        else
+        {
+            // error messgae
+        }
+
+    }
+
+    private String filter(String content)
+    {
+        //TODO need to use the filter data structure to filter the message from filtered words
+        return "";
 
     }
 
