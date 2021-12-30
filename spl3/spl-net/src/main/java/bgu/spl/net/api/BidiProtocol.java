@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class BidiProtocol implements BidiMessagingProtocol<String> {
 
+    //TODO connections.send is boolean function how can and should i use it?
 
     private int connectionHendlerId;
     private connectionImpl connections;
@@ -106,7 +107,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         }
         else
         {
-            //TODO error message
+            String error = "11" + "01";
+            connections.send(connectionHendlerId,error);
         }
     }
 
@@ -118,18 +120,20 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
             if(!user.getPassword().equals(password) || user.isConnected() || Integer.parseInt(captcha) != 1)
             {
-                //TODO error message
+                String error = "11" + "02";
+                connections.send(connectionHendlerId,error);
             }
             else
             {
                 connections.login(connectionHendlerId, user);
                 user.setConnectedHandlerID(connectionHendlerId);
-                // need to send pending messages if the user loged in and have pending messages
+                //TODO need to send pending messages if the user loged in and have pending messages
             }
         }
         else
         {
-            //TODO error message
+            String error = "11" + "02";
+            connections.send(connectionHendlerId,error);
         }
 
     }
@@ -139,7 +143,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         boolean ans = connections.logout(connectionHendlerId);
         if(!ans)
         {
-            //TODO error message
+            String error = "11" + "03";
+            connections.send(connectionHendlerId,error);
         }
         else
         {
@@ -149,11 +154,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     private void followUnfollow(String followOrUnfollow , String username)
     {
-
+        //
         boolean ans = connections.followOrUn(connectionHendlerId,username,followOrUnfollow);
         if(!ans)
         {
-            //TODO error message
+            String error = "11" + "04";
+            connections.send(connectionHendlerId,error);
         }
         else
         {
@@ -223,7 +229,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             }
             else
             {
-                // error message
+                String error = "11" + "05";
+                connections.send(connectionHendlerId,error);
             }
         }
     }
@@ -257,17 +264,20 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     }
                     else
                     {
-                        // error message
+                        String error = "11" + "06";
+                        connections.send(connectionHendlerId,error);
                     }
                 }
                 else
                 {
-                    //error message
+                    String error = "11" + "06";
+                    connections.send(connectionHendlerId,error);
                 }
             }
             else
             {
-                // error message
+                String error = "11" + "06";
+                connections.send(connectionHendlerId,error);
             }
         }
 
@@ -279,22 +289,29 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         if(user != null && user.getConnectedHandlerID() != -1)
         {
             LinkedList<String> logStatList = connections.logStat(connectionHendlerId);
-            String returnString;
-            for(int i = 0; i < logStatList.size()-1; i++)
+            String returnString = "";
+//            for(int i = 0; i < logStatList.size()-1; i++)
+//            {
+//                 returnString = "10" + "07" + logStatList.get(i) +"\n";
+//            }
+//            returnString = "10" + "07" + logStatList.get(logStatList.size()-1);
+//            connections.send(connectionHendlerId,returnString);
+            for(String s : logStatList)
             {
-                 returnString = "07" + logStatList.get(i) +"\n";
+                returnString = "10" + "07" + s + "\n";
             }
-            returnString = "07" + logStatList.get(logStatList.size()-1);
             connections.send(connectionHendlerId,returnString);
         }
         else
         {
-            // error messgae
+            String error = "11" + "07";
+            connections.send(connectionHendlerId,error);
         }
     }
 
     private void stat(String listOfUsernames)
     {
+
         User user = connections.getConnectedUser(connectionHendlerId);
         if(user != null && user.getConnectedHandlerID() != -1)
         {
@@ -317,27 +334,34 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             }
             LinkedList<String> stat = connections.stat(connectionHendlerId,userNames);
-            for(int i = 0 ; i < userNames.size(); i++)
-            {
-                User receivingUser = connections.getUser(userNames.get(i));
-                if(receivingUser != null)
+//            for(int i = 0 ; i < userNames.size(); i++)
+//            {
+//                User receivingUser = connections.getUser(userNames.get(i));
+//                if(receivingUser != null)
+//                {
+//                    String message = "10" + "08" + stat.get(i);
+//                    if (receivingUser.getConnectedHandlerID() != -1)
+//                    {
+//                        connections.send(receivingUser.getConnectedHandlerID(),message);
+//                    }
+//                    else
+//                    {
+//                        receivingUser.addToPendingMessages(message);
+//                    }
+//                }
+                String returningString = "";
+                for(String s : stat)
                 {
-                    // TODO ack opcode at the beginning of the string
-                    String message = "ack opcode" + "08" + stat.get(i);
-                    if (receivingUser.getConnectedHandlerID() != -1)
-                    {
-                        connections.send(receivingUser.getConnectedHandlerID(),message);
-                    }
-                    else
-                    {
-                        receivingUser.addToPendingMessages(message);
-                    }
+                    returningString = returningString + "10" + "08" + s ;
                 }
-            }
+                connections.send(connectionHendlerId,returningString);
+
+//            }
         }
         else
         {
-            // error messgae
+            String error = "11" + "08";
+            connections.send(connectionHendlerId,error);
         }
 
     }
