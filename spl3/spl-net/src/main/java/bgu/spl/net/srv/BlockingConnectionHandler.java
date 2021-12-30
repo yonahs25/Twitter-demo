@@ -14,7 +14,6 @@ import java.net.Socket;
 
 public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler<T> {
 
-    private User user = null; //TODO remove this
     private final int id;
     private final BidiMessagingProtocol<T> protocol;
     private final MessageEncoderDecoder<T> encdec;
@@ -31,11 +30,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     }
 
 
-    // TODO remove this
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
@@ -47,7 +41,7 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 //            protocol.start(id,protocol.getC);
 //            out = new BufferedOutputStream(sock.getOutputStream());
 
-            while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
+            while (!protocol.shouldTerminate() && (read = in.read()) >= 0) {
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
                     //T response = protocol.process(nextMessage);

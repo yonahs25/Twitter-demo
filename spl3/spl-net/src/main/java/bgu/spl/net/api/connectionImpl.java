@@ -32,7 +32,6 @@ public class connectionImpl<T> implements Connections<T> {
             return false;
         connectionHandler.send(msg);
         return true;
-
     }
 
     @Override

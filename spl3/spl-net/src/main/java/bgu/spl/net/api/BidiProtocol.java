@@ -281,7 +281,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             LinkedList<String> logStatList = connections.logStat(connectionHendlerId);
             String returnString;
             for(int i = 0; i < logStatList.size()-1; i++)
-            {
+            { //TODO change this
                  returnString = "07" + logStatList.get(i) +"\n";
             }
             returnString = "07" + logStatList.get(logStatList.size()-1);

@@ -5,9 +5,7 @@
 #include <iostream>
 
 
-/**
-* This code assumes that the server replies the exact text the client sent it (as opposed to the practical session example)
-*/
+
 int main (int argc, char *argv[]) {
     if (argc < 3) {
         std::cerr << "Usage: " << argv[0] << " host port" << std::endl << std::endl;
@@ -22,6 +20,8 @@ int main (int argc, char *argv[]) {
         return 1;
     }
 
+    bool* shouldTerminate = new bool(true);
+
 
 
 
@@ -35,12 +35,12 @@ private:
     std::mutex & _mutex;
     bool& shouldTerminate;
     ConnectionHandler& ConnectionHandler;
-    const short bufsize = 1024;
 
 public:
 
     void run()
     {
+
 
     }
     
@@ -65,11 +65,28 @@ class writeTask
 private:
     bool& shouldTerminate;
     ConnectionHandler& ConnectionHandler;
+    const short bufsize = 1024;
+
 
 
 
 public:    
-
+    void run()
+    {
+        while (1)
+        {
+            char buf[bufsize];
+            std::cin.getline(buf, bufsize);
+		    std::string line(buf);
+            if (!shouldTerminate) break;
+            if (!ConnectionHandler.sendLine(line)) {
+            std::cout << "Disconnected. Exiting...\n" << std::endl;
+            break;
+        }
+        }
+        
+        
+    }
 
 
 
