@@ -2,6 +2,10 @@ package bgu.spl.net.api;
 
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
+import bgu.spl.net.api.User;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -129,8 +133,14 @@ public class connectionImpl<T> implements Connections<T> {
     }
 
     public LinkedList<String> logStat (int id){
+        if(idToUser.get(id) == null)
+            return null;
 
-        return new LinkedList<>();
+        LinkedList<String> ans = new LinkedList<>();
+        for (User user : usernameToUserImpl.values()){
+            ans.add(user.getData());
+        }
+        return  ans;
     }
 
 
