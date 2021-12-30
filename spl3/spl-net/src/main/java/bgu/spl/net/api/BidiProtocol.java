@@ -18,8 +18,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
 
     @Override
-    public void start(int connectionId, Connections<String> connections) {
-
+    public void start(int connectionId, Connections<String> connections)
+    {
 
     }
 
@@ -27,10 +27,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     public void process(String message)
     {
 
-        // TODO find a better way to make empty char
-        byte[] emptyByteArr = new byte[1];
-        String emptyString = new String(emptyByteArr,0,1, StandardCharsets.UTF_8);
-        char zeroChar = emptyString.charAt(0);
+        String emptyString = "\0";
+        char zeroChar = 0;
         int start = 2;
         int end = 2;
         String opcode;
@@ -290,15 +288,9 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
             LinkedList<String> logStatList = connections.logStat(connectionHendlerId);
             String returnString = "";
-//            for(int i = 0; i < logStatList.size()-1; i++)
-//            {
-//                 returnString = "10" + "07" + logStatList.get(i) +"\n";
-//            }
-//            returnString = "10" + "07" + logStatList.get(logStatList.size()-1);
-//            connections.send(connectionHendlerId,returnString);
             for(String s : logStatList)
             {
-                returnString = "10" + "07" + s + "\n";
+                returnString = returnString + "10" + "07" + s + "\n";
             }
             connections.send(connectionHendlerId,returnString);
         }
@@ -334,29 +326,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             }
             LinkedList<String> stat = connections.stat(connectionHendlerId,userNames);
-//            for(int i = 0 ; i < userNames.size(); i++)
-//            {
-//                User receivingUser = connections.getUser(userNames.get(i));
-//                if(receivingUser != null)
-//                {
-//                    String message = "10" + "08" + stat.get(i);
-//                    if (receivingUser.getConnectedHandlerID() != -1)
-//                    {
-//                        connections.send(receivingUser.getConnectedHandlerID(),message);
-//                    }
-//                    else
-//                    {
-//                        receivingUser.addToPendingMessages(message);
-//                    }
-//                }
                 String returningString = "";
                 for(String s : stat)
                 {
-                    returningString = returningString + "10" + "08" + s ;
+                    returningString = returningString + "10" + "08" + s + "\n";
                 }
                 connections.send(connectionHendlerId,returningString);
-
-//            }
         }
         else
         {
