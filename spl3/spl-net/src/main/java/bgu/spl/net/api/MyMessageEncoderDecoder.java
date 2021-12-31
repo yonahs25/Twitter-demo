@@ -73,6 +73,7 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
             ArrayList<Byte> alwaysAdd = new ArrayList<>();
             //ans.addAll(alwaysAdd);
             for (int i=0; i<x.length;i++)  alwaysAdd.add(x[i]);
+            /*
             // ------------------------------------
             int space = message.indexOf(' ');
             int prevSpace;
@@ -107,6 +108,7 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
                 nextBackslashN = message.indexOf('\n', nextBackslashN+1);
             } //this is some long sh!t dont open if not needed
             // ------------------------------------
+            */
             return encodeStatOrLog(alwaysAdd,message);
         }
         return (message + ";").getBytes(); //uses utf8 by default
