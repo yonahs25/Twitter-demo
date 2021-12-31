@@ -83,7 +83,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             case ("08"):
                 stat(parameters.get(0));
                 break;
-
+            //TODO case "12" block
         }
 
     }
@@ -101,7 +101,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
             User newUser = new User(username,password,birthday);
             connections.register(newUser);
-            //TODO ack message for good registration
+            //TODO check if need to send more information in this ack message
+            String message = "10" + "01";
         }
         else
         {
@@ -125,7 +126,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             {
                 connections.login(connectionHendlerId, user);
                 user.setConnectedHandlerID(connectionHendlerId);
-                //TODO need to send pending messages if the user loged in and have pending messages
+                //TODO check if need ack "user i loged in"
+                ConcurrentLinkedDeque<String> pendingMessages =  user.getPendingMessages();
+                while (user.getConnectedHandlerID() != -1 && !pendingMessages.isEmpty())
+                {
+                    connections.send(connectionHendlerId,pendingMessages.remove());
+                }
             }
         }
         else
@@ -146,7 +152,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         }
         else
         {
-            //TODO ack message
+            String message = "10" + "03";
+            connections.send(connectionHendlerId,message);
         }
     }
 
@@ -161,20 +168,19 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         }
         else
         {
-            //TODO ack message
+            String message = "10" + "04" + username;
         }
     }
 
 
-    private void post(String content) {
-        // need to save posts to data structure in the server
+    private void post(String content)
+    {
+        //TODO need to save posts to data structure in the server
         byte[] emptyByteArr = new byte[1];
         String emptyString = new String(emptyByteArr, 0, 1, StandardCharsets.UTF_8);
-
-        //increment number of posts
-//        int indexOfSpace = content.indexOf(" ");
         User user = connections.getConnectedUser(connectionHendlerId);
-        if (user != null) {
+        if (user != null)
+        {
             LinkedList<String> usersStrings = new LinkedList<String>();
             int lastIndexOf = content.lastIndexOf("@");
             int space = (content.substring(lastIndexOf)).indexOf(" ");
@@ -224,6 +230,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                         }
                     }
                 }
+                //increment the number of posts the user posted
+               user.incrementPostsCount();
             }
             else
             {
@@ -268,6 +276,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 }
                 else
                 {
+                    //TODO check if need a unique error message
                     String error = "11" + "06";
                     connections.send(connectionHendlerId,error);
                 }
@@ -347,6 +356,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         return "";
 
     }
+    //TODO implement private block method
 
 
 

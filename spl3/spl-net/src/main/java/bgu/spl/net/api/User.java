@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
 
-    private ConnectionHandler connectionHandler;
-    //TODO make connctionhendlerid atomicinteger
     private AtomicInteger connectedHandlerID;
     private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
@@ -27,8 +25,7 @@ public class User {
         this.birthDay = birthDay;
         age = calculateAge(birthDay);
         connected = false;
-        connectionHandler=null;
-//        connectedHandlerID.compareAndSet(-1) ;
+       connectedHandlerID.set(-1);
     }
 
     public int getConnectedHandlerID() {
@@ -36,15 +33,25 @@ public class User {
     }
 
     public void setConnectedHandlerID(int connectedHandlerID) {
-//        TODO
+        int oldVal;
+        int newVal;
+        do {
+            oldVal = this.connectedHandlerID.get();
+            newVal = connectedHandlerID;
+        } while (!this.connectedHandlerID.compareAndSet(oldVal, newVal));
     }
 
-    public void setConnectionHandler(ConnectionHandler connectionHandler) {
-        this.connectionHandler = connectionHandler;
-    }
     private int calculateAge(String birthDay){
-        // TODO calculateAge
-        return 0;
+        int day = Integer.parseInt(birthDay.substring(0,2));
+        int month = Integer.parseInt(birthDay.substring(3,5));
+        int year = Integer.parseInt(birthDay.substring(6));
+        // the date is 01-01-2022
+        int ans = 2022-year;
+        if(month > 1)
+            ans--;
+        if(month == 1 && day > 1)
+            ans--;
+        return ans;
     }
     public int getAge(){
         return age;
@@ -61,11 +68,6 @@ public class User {
     public boolean isConnected() {
        return connectedHandlerID.get() != -1;
     }
-
-    public ConnectionHandler getConnectionHandler() {
-        return connectionHandler;
-    }
-
 
     public ConcurrentLinkedDeque<User> getFollowers() {
         return followers;
