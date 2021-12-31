@@ -326,12 +326,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             }
             LinkedList<String> stat = connections.stat(connectionHendlerId,userNames);
-            String returningString = "";
-            for(String s : stat)
-            {
-                returningString = returningString + "10" + "08" + s + "\n";
-            }
-            connections.send(connectionHendlerId,returningString);
+                String returningString = "";
+                for(String s : stat)
+                {
+                    returningString = returningString + "10" + "08" + s + "\n";
+                }
+                connections.send(connectionHendlerId,returningString);
         }
         else
         {
