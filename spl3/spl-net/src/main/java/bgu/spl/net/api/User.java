@@ -1,22 +1,19 @@
 package bgu.spl.net.api;
 
-import bgu.spl.net.srv.bidi.ConnectionHandler;
-
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class User {
 
     private AtomicInteger connectedHandlerID;
-    private ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
-    private ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
-    private ConcurrentLinkedDeque<User> blockedUsers = new ConcurrentLinkedDeque<>();
-    private ConcurrentLinkedDeque<String> pendingMessages = new ConcurrentLinkedDeque<>();
-    private String username;
-    private String password;
+    private final ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<User> blockedUsers = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<String> pendingMessages = new ConcurrentLinkedDeque<>();
+    private final String username;
+    private final String password;
     private String birthDay;
-    private boolean connected;
-    private int age;
+    private final int age;
     private int amountOfPosts = 0;
 
     public User(String username, String password, String birthDay) {
@@ -24,8 +21,7 @@ public class User {
         this.password = password;
         this.birthDay = birthDay;
         age = calculateAge(birthDay);
-        connected = false;
-       connectedHandlerID.set(-1);
+        connectedHandlerID = new AtomicInteger(-1);
     }
 
     public int getConnectedHandlerID() {
@@ -39,6 +35,14 @@ public class User {
             oldVal = this.connectedHandlerID.get();
             newVal = connectedHandlerID;
         } while (!this.connectedHandlerID.compareAndSet(oldVal, newVal));
+    }
+
+    public boolean isConnected() {
+        return connectedHandlerID.get() != -1;
+    }
+
+    public boolean tryLogIn(int ID){ //this may work
+        return connectedHandlerID.compareAndSet(-1,ID);
     }
 
     private int calculateAge(String birthDay){
@@ -65,9 +69,7 @@ public class User {
         return password;
     }
 
-    public boolean isConnected() {
-       return connectedHandlerID.get() != -1;
-    }
+
 
     public ConcurrentLinkedDeque<User> getFollowers() {
         return followers;

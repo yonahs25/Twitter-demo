@@ -137,6 +137,7 @@ public class connectionImpl<T> implements Connections<T> {
 
         LinkedList<String> ans = new LinkedList<>();
         for (User user : usernameToUserImpl.values()){
+            if(user.getConnectedHandlerID() == id)  continue;
             ans.add(user.getData());
         }
         return  ans;
