@@ -2,10 +2,6 @@ package bgu.spl.net.api;
 
 import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
-import bgu.spl.net.api.User;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -25,6 +21,13 @@ public class connectionImpl<T> implements Connections<T> {
         return singeltonHolder.instance;
     }
 
+
+    /*
+    ACK 10 STAT
+    STAT
+    STAT
+
+     */
     @Override
     public boolean send(int connectionId, T msg) {
         ConnectionHandler<T> connectionHandler = idToConnectionHandler.get(connectionId);
@@ -54,14 +57,7 @@ public class connectionImpl<T> implements Connections<T> {
 
 
     // ------------------------------------ helper functions -------------------------
-    // meant to check if some1 is logged in to user
-    public int findIdFromUser(String username){
-        User user = getUser(username);
-        if (user != null)
-            return user.getConnectedHandlerID();
 
-        return  -2;
-    }
 
     //returns user object with given username, returns null if there is no such username
     public User getUser(String username)
@@ -101,12 +97,9 @@ public class connectionImpl<T> implements Connections<T> {
     public boolean followOrUn(int myID, String username, String followOrUn) {
         User otherUser = usernameToUserImpl.get(username);
         User myUser = idToUser.get(myID);
-        if (otherUser == null || myUser == null) {
+        if (otherUser == null || myUser == null)
             return false;
-        }
-        //switch (followOrUn){
 
-        //  case ("0"):
 
         // follow case
         if(followOrUn.equals("0")){
@@ -120,7 +113,7 @@ public class connectionImpl<T> implements Connections<T> {
                 return true;
             }
         // unfollow case
-        }else {
+        } else {
             if (!myUser.getFollowing().contains(otherUser))
                 return false;
             else{

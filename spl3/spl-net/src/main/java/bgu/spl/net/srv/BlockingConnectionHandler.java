@@ -1,10 +1,8 @@
 package bgu.spl.net.srv;
 
-import bgu.spl.net.api.BidiProtocol;
-import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.api.MessagingProtocol;
-import bgu.spl.net.api.User;
+import bgu.spl.net.api.*;
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
+import bgu.spl.net.api.bidi.Connections;
 import bgu.spl.net.srv.bidi.ConnectionHandler;
 
 import java.io.BufferedInputStream;
@@ -20,7 +18,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     private final Socket sock;
     private BufferedInputStream in;
     private BufferedOutputStream out;
-    private volatile boolean connected = true;
 
     public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, BidiMessagingProtocol<T> protocol, int id) {
         this.sock = sock;
@@ -33,6 +30,9 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     @Override
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
+            protocol.start(id, connectionImpl.getInstance());
+            connectionImpl.getInstance().putHandler(id,this);
+
             int read;
 
 
@@ -78,7 +78,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     @Override
     public void close() throws IOException {
-        connected = false;
         sock.close();
     }
 

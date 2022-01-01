@@ -3,8 +3,8 @@
 #include <mutex>
 #include <thread>
 #include <iostream>
-
-
+#include <string>
+ using namespace std;
 
 int main (int argc, char *argv[]) {
     if (argc < 3) {
@@ -44,7 +44,20 @@ public:
 
     void run()
     {
+        while(1){
+            string answer;
+            if (!ConnectionHandler.getLine(answer)) {
+            std::cout << "Disconnected. Exiting...\n" << std::endl;
+            break;
+        }
+            int len=answer.length();
+            answer.resize(len-1);
+            cout<< answer << endl;
+            if(answer == "sonething")
+            break;
 
+
+        }
 
     }
     
@@ -87,6 +100,7 @@ public:
             std::cout << "Disconnected. Exiting...\n" << std::endl;
             break;
         }
+
         }
         
         

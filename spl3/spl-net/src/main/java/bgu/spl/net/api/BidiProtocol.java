@@ -28,12 +28,11 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     @Override
     public void process(String message) {
 
-        String emptyString = "\0";
         char zeroChar = 0;
         int start = 2;
         int end = 2;
         String opcode;
-        LinkedList<String> parameters = new LinkedList<String>();
+        LinkedList<String> parameters = new LinkedList<>();
         opcode = message.substring(0, 2);
 
         while (end < message.length())
@@ -92,9 +91,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             case ("12"):
                 block(parameters.get(0));
                 break;
-
         }
-
     }
 
     @Override
@@ -104,10 +101,9 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     private void register(String username, String password, String birthday) {
         User user = connections.getUser(username);
-        if (user == null) {
+        if (user == null) {//think
             User newUser = new User(username, password, birthday);
             connections.register(newUser);
-            //TODO check if need to send more information in this ack message
             String message = "10" + "01";
             connections.send(connectionHandlerId, message);
         } else {
@@ -201,7 +197,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         User user = connections.getConnectedUser(connectionHandlerId);
         if (user != null)
         {
-            LinkedList<String> usersStrings = new LinkedList<String>();
+            LinkedList<String> usersStrings = new LinkedList<>();
             boolean stop = false;
 
             while(!stop)
@@ -229,7 +225,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     }
                     else
                     {
-                        user.addToPendingMessages(messageString);
+                        u.addToPendingMessages(messageString);
                     }
                 }
                 for (String name : usersStrings)
@@ -243,14 +239,13 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                         }
                         else
                         {
-                            user.addToPendingMessages(messageString);
+                            user1.addToPendingMessages(messageString);
                         }
                     }
                 }
                 //increment the number of posts the user posted
                 user.incrementPostsCount();
-                //TODO check if this ack is needed
-                String ack = "10" + "05";
+                String ack = "10" + "05"; // TODO check
                 connections.send(connectionHandlerId,ack);
             }
             else
@@ -267,7 +262,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         if (user != null)
         {
             if (user.getConnectedHandlerID() != -1)
-            {//???
+            {
                 User receivingUser = connections.getUser(username);
                 if (receivingUser != null)
                 {
@@ -277,9 +272,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     if (!content.equals("") && followingList.contains(receivingUser))
                     {
                         //TODO save the pm message to a data structure
-                        // TODO need to filter the message
                         String filteredContent = filter(content);
-                        String message = "09" + "0" + user.getUsername() +"\0" +filteredContent +"\0";
+                        String message = "09" + "0" + user.getUsername() +"\0" + filteredContent +"\0";
                         if (receivingUser.getConnectedHandlerID() != -1)
                         {
                             connections.send(receivingUser.getConnectedHandlerID(), message);
@@ -356,7 +350,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             int index = 0;
             boolean stop = false;
             while (!stop) {
-                int needToBeFound = listOfUsernames.indexOf("|", index);
+                int needToBeFound = listOfUsernames.indexOf('|', index);
                 if (needToBeFound != -1) {
                     String username = listOfUsernames.substring(index, needToBeFound);
                     userNames.add(username);
@@ -387,7 +381,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     private void block(String username)
     {
         User userToBlock = connections.getUser(username);
-        if (userToBlock !=null)
+        if (userToBlock != null)
         {
 
             User user = connections.getConnectedUser(connectionHandlerId);
