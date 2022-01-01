@@ -17,7 +17,7 @@ public abstract class BaseServer<T> implements Server<T> {
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> encdecFactory;
     private ServerSocket sock;
-    private String[] filer = new String[0];
+    private String[] filter = {"race","rice","fun","rock","gum","dog","gravity"};
 
 
     public BaseServer(

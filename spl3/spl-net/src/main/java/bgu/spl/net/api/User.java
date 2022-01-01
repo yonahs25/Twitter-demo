@@ -107,5 +107,9 @@ public class User {
         return (age + " " + amountOfPosts + " " + followers.size() + " " + following.size());
     }
 
+    public void addToBlockingList(User userToBlock){
+        blockedUsers.add(userToBlock);
+    }
+
 
 }
