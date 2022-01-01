@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +132,9 @@
       <workItem from="1640870532604" duration="1796000" />
       <workItem from="1640882389574" duration="5704000" />
       <workItem from="1640957568438" duration="1401000" />
-      <workItem from="1641024948862" duration="5726000" />
+      <workItem from="1641024948862" duration="5786000" />
+      <workItem from="1641036114207" duration="207000" />
+      <workItem from="1641036350256" duration="599000" />
     </task>
     <servers />
   </component>

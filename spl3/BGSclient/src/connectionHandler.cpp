@@ -64,11 +64,11 @@ bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
 }
  
 bool ConnectionHandler::getLine(std::string& line) {
-    return getFrameAscii(line, '\n');
+    return getFrameAscii(line, ';');
 }
 
 bool ConnectionHandler::sendLine(std::string& line) {
-    return sendFrameAscii(line, '\n');
+    return sendFrameAscii(line, ';');
 }
  
 bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
@@ -88,6 +88,57 @@ bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
 }
  
 bool ConnectionHandler::sendFrameAscii(const std::string& frame, char delimiter) {
+
+
+
+
+    int space = frame.find_first_of(' ');
+    string op = frame.substr(0,space);
+    //register
+    // REGISTER ABC 12345 11-11-1996 [01STRING 0 PASSWORD 0 BIRTDAY 0]
+    if(!op.compare("REGISTER")){
+        int space2 = frame.find_first_of(' ', space + 1);
+        string Opcode = "01";
+        string userName = frame.substr(space + 1, space2 - space + 1);
+        string OpAndUser = Opcode + userName;
+        space = space2 + 1;
+        space2 = frame.find_first_of(' ', space);
+        string password = frame.substr(space, space2 - space);
+        space = space2 + 1;
+        string dateOfBirth = frame.substr(space , frame.size() - space);
+        const char* first = OpAndUser.c_str(); // [01username 0]
+        const char* second = password.c_str(); //[password 0]
+        const char* third = dateOfBirth.c_str(); // [25-10-1996 0]
+        int size = OpAndUser.size() + password.size() + dateOfBirth.size() + 3;
+        char* final = new char[size];
+        for (int i = 0; i < OpAndUser.size() + 1; i++){
+            final[i] = first[i];
+        }
+        int j = OpAndUser.size() + 1;
+        for (int i = 0; i < password.size() + 1; i++){
+            final[j] = second[i];
+            j++;
+        } 
+        j = OpAndUser.size() + 2 + password.size();
+        for (int i = 0; i < dateOfBirth.size() + 1; i++){
+            final[j] = third[i];
+            j++;
+        } 
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	bool result=sendBytes(frame.c_str(),frame.length());
 	if(!result) return false;
 	return sendBytes(&delimiter,1);
