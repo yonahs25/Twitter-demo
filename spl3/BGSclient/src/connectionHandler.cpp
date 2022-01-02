@@ -301,7 +301,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
         sent = sendBytes(final.c_str(), 2);
     } else if (!frame.compare("LOGOUT")) {
         string final = "03";
-        sent = sendBytes(final.c_str(), 2);
+            sent = sendBytes(final.c_str(), 2);
 
     } else {
         int space = frame.find_first_of(' ');

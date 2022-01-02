@@ -1,6 +1,8 @@
 package bgu.spl.net.impl.newsfeed;
 
 import bgu.spl.net.api.BidiProtocol;
+import bgu.spl.net.api.MyMessageEncoderDecoder;
+import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.impl.echo.EchoProtocol;
 import bgu.spl.net.impl.echo.LineMessageEncoderDecoder;
 import bgu.spl.net.impl.rci.ObjectEncoderDecoder;
@@ -13,6 +15,10 @@ public class NewsFeedServerMain {
         NewsFeed feed = new NewsFeed(); //one shared object
 
 // you can use any server...
+        Server.threadPerClient(
+                7777,
+                BidiProtocol::new,
+                MyMessageEncoderDecoder::new).serve();
 
 //        Server.threadPerClient(
 //                7777, //port

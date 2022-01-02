@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class BidiProtocol implements BidiMessagingProtocol<String> {
 
 
-    private int connectionHandlerId;
-    private connectionImpl<String> connections;
-    private boolean terminate;
+    private int connectionHandlerId=-1;
+    private connectionImpl<String> connections=null;
+    private boolean terminate=false;
 
 
 
