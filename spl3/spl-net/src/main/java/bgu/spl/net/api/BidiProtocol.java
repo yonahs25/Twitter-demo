@@ -2,6 +2,7 @@ package bgu.spl.net.api;
 
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
+import bgu.spl.net.api.bidi.messageStructure;
 import bgu.spl.net.srv.BaseServer;
 
 import java.nio.charset.StandardCharsets;
@@ -10,11 +11,10 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class BidiProtocol implements BidiMessagingProtocol<String> {
 
-    //TODO connections.send is boolean function how can and should i use it?
 
     private int connectionHandlerId;
     private connectionImpl<String> connections;
-
+    private boolean terminate;
 
 
 
@@ -22,6 +22,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
     public void start(int connectionId, Connections<String> connections) {
         this.connectionHandlerId = connectionId;
         this.connections = (connectionImpl<String>) connections;
+        terminate = false;
 
     }
 
@@ -37,7 +38,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
         while (end < message.length())
         {
-            System.out.print(message.charAt(end));
             if (message.charAt(end) == zeroChar )
             {
                 parameters.add(message.substring(start, end));
@@ -96,7 +96,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     @Override
     public boolean shouldTerminate() {
-        return false;
+        return terminate;
     }
 
     private void register(String username, String password, String birthday) {
@@ -172,7 +172,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             String message = "10" + "03";
             connections.send(connectionHandlerId, message);
         }
-        //TODO need to terminate client
+        terminate = true;
     }
 
     private void followUnfollow(String followOrUnfollow, String username)
@@ -193,7 +193,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     private void post(String content)
     {
-        //TODO need to save posts to data structure in the server
         User user = connections.getConnectedUser(connectionHandlerId);
         if (user != null)
         {
@@ -214,6 +213,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             if (user.getConnectedHandlerID() != -1)
             {
+                //TODO check if need to filter the content
+                messageStructure.getInstance().insertMessage(content);
                 String messageString = "09" + "1" + user.getUsername() + "\0" + content + "\0" ;
                 ConcurrentLinkedDeque<User> followers = user.getFollowers();
                 for (User u : followers)
@@ -271,8 +272,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     ConcurrentLinkedDeque<User> followingList = user.getFollowers();
                     if (!content.equals("") && followingList.contains(receivingUser))
                     {
-                        //TODO save the pm message to a data structure
-                        String filteredContent = filter(content);
+                        String filteredContent = messageStructure.getInstance().filter(content);
+                        messageStructure.getInstance().insertMessage(filteredContent);
                         String message = "09" + "0" + user.getUsername() +"\0" + filteredContent +"\0";
                         if (receivingUser.getConnectedHandlerID() != -1)
                         {
@@ -373,11 +374,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     }
 
-    private String filter(String content) {
-        //TODO
-        return "";
-
-    }
     private void block(String username)
     {
         User userToBlock = connections.getUser(username);
@@ -385,7 +381,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
 
             User user = connections.getConnectedUser(connectionHandlerId);
-            //TODO need to check if the user is connected?
             if(user != null) {
                 user.getFollowers().remove(userToBlock);
                 user.getFollowing().remove(userToBlock);
