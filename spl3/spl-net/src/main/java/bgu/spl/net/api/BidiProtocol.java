@@ -362,9 +362,9 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             }
             LinkedList<String> stat = connections.stat(connectionHandlerId, userNames);
-            String returningString = "";
+            String returningString = "1008\n";
             for (String s : stat) {
-                returningString = returningString + "10" + "08" + s + "\n";
+                returningString = returningString + s + "\n";
             }
             connections.send(connectionHandlerId, returningString);
         } else {
