@@ -19,7 +19,7 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         if (nextByte == ';') {
             return popString();
         }
-
+        System.out.println(nextByte);
         pushByte(nextByte);
         return null; //not a line yet
     }
@@ -118,8 +118,6 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         if (len >= bytes.length) {
             bytes = Arrays.copyOf(bytes, len * 2);
         }
-        if (nextByte == 0)
-
         bytes[len++] = nextByte;
     }
 

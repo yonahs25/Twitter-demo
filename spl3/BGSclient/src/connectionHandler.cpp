@@ -61,6 +61,7 @@ bool ConnectionHandler::getBytes(char bytes[], unsigned int bytesToRead) {
 }
 
 bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
+    cout << bytes<<endl;
     int tmp = 0;
     boost::system::error_code error;
     try {
@@ -277,7 +278,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
         sent = sendBytes(final.c_str(), 2);
     } else if (!frame.compare("LOGOUT")) {
         string final = "03";
-            sent = sendBytes(final.c_str(), 2);
+        sent = sendBytes(final.c_str(), 2);
 
     } else {
         int space = frame.find_first_of(' ');
@@ -298,7 +299,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             const char *second = password.c_str(); //[password 0]
             const char *third = dateOfBirth.c_str(); // [25-10-1996 0]
             int size = OpAndUser.size() + password.size() + dateOfBirth.size() + 3;
-            char *final = new char[size];
+            char final[size];
             for (int i = 0; i < OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
             }
@@ -312,6 +313,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
                 final[j] = third[i];
                 j++;
             }
+            sent = sendBytes(final, size);
 
         } else if (!op.compare("LOGIN")) {
             int space2 = frame.find_first_of(' ', space + 1);
@@ -343,7 +345,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             string final = Opcode + followOrUnfollow + username;
             // aaaaa 5
             // [a a a a a 0] 6
-            sendBytes(final.c_str(), final.size());
+            sent = sendBytes(final.c_str(), final.size());
 
             //need to send
         } else if (!op.compare("PM")) {

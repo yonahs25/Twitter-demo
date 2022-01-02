@@ -49,6 +49,7 @@ public abstract class BaseServer<T> implements Server<T> {
                         protocolFactory.get(),
                         ID++);
 
+
                 execute(handler);
             }
         } catch (IOException ex) {
