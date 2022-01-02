@@ -44,7 +44,9 @@ bool ConnectionHandler::getBytes(char bytes[], unsigned int bytesToRead) {
         std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
         return false;
     }
+
     return true;
+
 }
 
 bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
@@ -70,20 +72,121 @@ bool ConnectionHandler::getLine(std::string& line) {
 bool ConnectionHandler::sendLine(std::string& line) {
     return sendFrameAscii(line, ';');
 }
+
+
  
 bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
-    char ch;
+    char ch[2];
     // Stop when we encounter the null character. 
     // Notice that the null character is not appended to the frame string.
     try {
-		do{
-			getBytes(&ch, 1);
-            frame.append(1, ch);
-        }while (delimiter != ch);
-    } catch (std::exception& e) {
+			getBytes(ch, 2);
+            frame.append(ch, 2);
+        } catch (std::exception& e) {
         std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
         return false;
     }
+
+    //notification
+    if (!frame.compare("09"))
+    {
+        char c;
+        try {
+		do{
+			getBytes(&c,1);
+            frame.append(1, c);
+        }while (delimiter != c);
+        } catch (std::exception& e) {
+            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+        return false;
+        }
+        string op = "NOTIFICATION";
+        string type;
+        if(frame.at(2) == '0') type = "PM";
+        else type == "Public";
+        char c = NULL;
+        int space = frame.find_first_of(c);
+        // [091string0]
+        string name = frame.substr(3,space - 3);
+        string content = frame.substr(space + 1);
+        string newFrame = op + " " + type + " " + name + " " + content; // check if need to shrink later
+    }
+    //error
+    else if (!frame.compare("11"))
+    { //TODO mistake, need to ignore 0
+        char c;
+        try {
+		do{
+			getBytes(&c,1);
+            frame.append(1, c);
+        }while (delimiter != c);
+        } catch (std::exception& e) {
+            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+        return false;
+        }
+
+
+
+        string newframe = "ERROR " + frame.substr(2);
+        frame = newframe;        
+        // do error
+    }
+    //ack
+    else 
+    { 
+        try {
+			getBytes(ch, 2);
+            frame.append(ch, 2);
+        } catch (std::exception& e) {
+        std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+        return false;
+        }
+        if(!frame.substr(2,2).compare("01"))
+        {
+            string new_frame = "ACK 1";
+            frame = new_frame;
+        }
+        else if(!frame.substr(2,2).compare("02"))
+        {
+            string new_frame = "ACK 2";
+            frame = new_frame;
+        }
+        else if(!frame.substr(2,2).compare("03"))
+        {
+            string new_frame = "ACK 3";
+            frame = new_frame;
+        }
+        else if(!frame.substr(2,2).compare("04"))
+        {
+            string new_frame = "ACK 4";
+            frame = new_frame;
+        } else if (!frame.substr(2,2).compare("07")){
+            string alwaysAdd = "ACK 07";
+            string ans = "";
+            char c;
+            //remember remember the ch[2]
+
+
+
+        }
+
+
+
+
+        char c;
+        try {
+		do{
+			getBytes(&c,1);
+            frame.append(1, c);
+        }while (delimiter != ch[0]);
+        } catch (std::exception& e) {
+            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+        return false;
+        }
+
+    
+    // if string is for log or stat call new function
+    //else continue this 
     //ACK message
     if(!frame.substr(0,2).compare("10"))
     {
@@ -99,7 +202,8 @@ bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
         }
         if(!frame.substr(2,2).compare("03"))
         {
-            //logout
+            string new_frame = "ACK 3";
+            frame = new_frame;
         }
         if(!frame.substr(2,2).compare("04"))
         {
@@ -107,8 +211,12 @@ bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
             frame = new_frame;
         }
         if(!frame.substr(2,2).compare("07"))
-        {
-            //logstat
+        {//logstat
+            
+
+
+
+
         }
         if(!frame.substr(2,2).compare("08"))
         {
@@ -135,6 +243,7 @@ bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
 
 
         
+    }
     }
 
 
@@ -266,4 +375,10 @@ void ConnectionHandler::close() {
     } catch (...) {
         std::cout << "closing failed: connection already closed" << std::endl;
     }
+}
+short bytesToShort(char* bytesArr)
+{
+    short result = (short)((bytesArr[0] & 0xff) << 8);
+    result += (short)(bytesArr[1] & 0xff);
+    return result;
 }
