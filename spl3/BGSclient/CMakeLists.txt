@@ -8,4 +8,4 @@ include_directories(include)
 add_executable(BGSclient
         include/connectionHandler.h
         src/BGSclient.cpp
-        src/connectionHandler.cpp)
+        src/connectionHandler.cpp include/readTask.h src/readTask.cpp include/writeTask.h src/writeTask.cpp)

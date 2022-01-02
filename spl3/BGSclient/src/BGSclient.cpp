@@ -6,6 +6,8 @@
 #include <string>
 
 using namespace std;
+
+/*
 class readTask
 {
 private:
@@ -76,6 +78,7 @@ public:
         return result;
     }
 };
+ */
 
 int main (int argc, char *argv[]) {
     if (argc < 3) {
@@ -93,8 +96,7 @@ int main (int argc, char *argv[]) {
     }
 
     bool shouldTerminate = false;
-    readTask readTask(shouldTerminate, connectionHandler);
-    thread t1(&readTask::run, &readTask);
+
 
 
 

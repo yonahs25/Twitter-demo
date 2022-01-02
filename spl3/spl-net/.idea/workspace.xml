@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BGSclient/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BGSclient/bin/connectionHandler.o" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/bin/connectionHandler.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BGSclient/makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,6 +142,7 @@
       <workItem from="1641111877061" duration="1272000" />
       <workItem from="1641132091069" duration="663000" />
       <workItem from="1641143057784" duration="818000" />
+      <workItem from="1641147658789" duration="965000" />
     </task>
     <servers />
   </component>

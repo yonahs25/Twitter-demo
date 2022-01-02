@@ -213,77 +213,53 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
                 ans = ans + alwaysAdd + to_string(one) + " " + to_string(two) +
                         " " + to_string(three) + " " + to_string(four) + '\n';
             }
-
-
-
-        }
-
-
-        char c;
-        try {
-            do {
+            frame = ans;
+        } else if (!frame.substr(2, 2).compare("08")) {
+            string alwaysAdd = "ACK 08 ";
+            string ans;
+            char c;
+            try {
                 getBytes(&c, 1);
-                frame.append(1, c);
-            } while (delimiter != ch[0]);
-        } catch (std::exception &e) {
-            std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-            return false;
-        }
-
-
-        // if string is for log or stat call new function
-        //else continue this
-        //ACK message
-
-        if (!frame.substr(0, 2).compare("10")) {
-            if (!frame.substr(2, 2).compare("01")) {
-                string new_frame = "ACK 1";
-                frame = new_frame;
+            } catch (std::exception &e) {
+                std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                return false;
             }
-            if (!frame.substr(2, 2).compare("02")) {
-                string new_frame = "ACK 2";
-                frame = new_frame;
+            while (delimiter != c) {
+                ch[0] = c;
+                try {
+                    getBytes(&c, 1);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                ch[1] = c;
+                short one = bytesToShort(ch);
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short two = bytesToShort(ch);
+
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short three = bytesToShort(ch);
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short four = bytesToShort(ch);
+                ans = ans + alwaysAdd + to_string(one) + " " + to_string(two) +
+                      " " + to_string(three) + " " + to_string(four) + '\n';
             }
-            if (!frame.substr(2, 2).compare("03")) {
-                string new_frame = "ACK 3";
-                frame = new_frame;
-            }
-            if (!frame.substr(2, 2).compare("04")) {
-                string new_frame = "ACK 4";
-                frame = new_frame;
-            }
-            if (!frame.substr(2, 2).compare("07")) {//logstat
-
-
-
-
-
-            }
-            if (!frame.substr(2, 2).compare("08")) {
-                //stat
-            }
-        }
-            //ERROR
-        else if (!frame.substr(0, 2).compare("11")) {
-            string newframe = "ERROR " + frame.substr(2);
-            frame = newframe;
-        }
-            //NOTIFICATION
-        else if (!frame.substr(0, 2).compare("09")) {
-            string op = "NOTIFICATION";
-            string type;
-            if (frame.at(2) == '0') type = "PM";
-            else type == "Public";
-            char c = NULL;
-            int space = frame.find_first_of(c);
-            // [091string0]
-            string name = frame.substr(3, space - 3);
-            string content = frame.substr(space + 1);
-            string newFrame = op + " " + type + " " + name + " " + content; // check if need to shrink later
-
-
-
-
+            frame = ans;
         }
     }
 
