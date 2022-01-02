@@ -332,9 +332,9 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         }
         else
         {
-            String returnString = "";
+            String returnString = "1007\n";
             for (String s : logStatList)
-                returnString = returnString + "10" + "07" + s + "\n";
+                returnString = returnString + s + "\n";
 
             connections.send(connectionHandlerId, returnString);
         }

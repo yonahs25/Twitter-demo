@@ -25,13 +25,15 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
     }
 
     private byte[] encodeStatOrLog(ArrayList<Byte> alwaysAdd, String message) {
-        ArrayList<Byte> ans = new ArrayList<>();
-        int space = message.indexOf(' ');
-        int prevSpace;
+        ArrayList<Byte> ans = new ArrayList<>(alwaysAdd);
         int nextBackslashN = message.indexOf('\n');
+        message = message.substring(nextBackslashN+1);
+        int space ;
+        int prevSpace;
+        nextBackslashN = message.indexOf('\n');
         while (nextBackslashN != -1) {
-            ans.addAll(alwaysAdd);
-            byte[] one = shortToBytes(Short.parseShort(message.substring(4,space)));
+            space = message.indexOf(' ');
+            byte[] one = shortToBytes(Short.parseShort(message.substring(0,space)));
             System.out.println(Arrays.toString(one));
             prevSpace = space+1;
             space = message.indexOf(' ', prevSpace);
@@ -42,12 +44,10 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
             byte[] three = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
             System.out.println(Arrays.toString(three));
             prevSpace = space+1;
-            space = message.indexOf(' ', prevSpace);
             byte[] four = shortToBytes(Short.parseShort(message.substring(prevSpace,nextBackslashN)));
             System.out.println(Arrays.toString(four) + '\n');
             message = message.substring(nextBackslashN+1);
             nextBackslashN = message.indexOf('\n');
-            space = message.indexOf(' ');
             ans.add(one[0]);
             ans.add(one[1]);
             ans.add(two[0]);
