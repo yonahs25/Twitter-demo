@@ -73,22 +73,41 @@ public class connectionImpl<T> implements Connections<T> {
 
     // ------------------------------------ Op Functions ------------------------------------------
     public boolean register (User user){
+        System.out.println("connections");
+        if(usernameToUserImpl.get(user.getUsername()) == null)
+            System.out.println("the user not registered yet");
+        else
+            System.out.println("the user is  already registered");
         usernameToUserImpl.putIfAbsent(user.getUsername(),user);
+        System.out.println("connections end --------------------------");
         return true;
     }
 
 
     public void login(int id, User user) {
+        System.out.println("connections");
+        if(idToUser.get(id) == null)
+            System.out.println("the user not loged-in yet");
+        else
+            System.out.println("the user is already connected");
         idToUser.putIfAbsent(id, user);
+        System.out.println("connections end --------------------------");
+
+
     }
 
     public boolean logout(int id) {
         User myUser = idToUser.get(id);
-        if (myUser == null)
+        if (myUser == null) {
+            System.out.println("the user not connected");
             return false;
+        }
         else {
             myUser.setConnectedHandlerID(-1);
             idToUser.remove(id);
+            System.out.println("user connectionHendler id after logout : " + myUser.getConnectedHandlerID());
+            if(idToUser.get(id) == null)
+                System.out.println("user was removed from the map");
             return true;
         }
     }

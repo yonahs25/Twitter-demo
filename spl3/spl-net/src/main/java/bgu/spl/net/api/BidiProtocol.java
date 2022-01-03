@@ -28,7 +28,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     @Override
     public void process(String message) {
-
+        System.out.println("the receiving message : " + message);
         char zeroChar = 0;
         int start = 2;
         int end = 2;
@@ -57,40 +57,71 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
         switch (opcode) {
             case ("01"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("username : " + parameters.get(0));
+                System.out.println("password : " + parameters.get(1));
+                System.out.println("birthday : " + parameters.get(2));
+                System.out.println("---------------------------------------------------------");
                 register(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("02"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("username : " + parameters.get(0));
+                System.out.println("password : " + parameters.get(1));
+                System.out.println("captcha : " + parameters.get(2));
+                System.out.println("---------------------------------------------------------");
                 login(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("03"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("---------------------------------------------------------");
                 logout();
                 break;
 
             case ("04"):
+                System.out.println("protocol---------------------------------------------------");
                 String ForU = parameters.get(0).substring(0,1);
                 String user  = parameters.get(0).substring(1);
+                System.out.println("f/u : " + ForU);
+                System.out.println("username : " + user);
+                System.out.println("---------------------------------------------------------");
                 followUnfollow(ForU ,user);
                 break;
 
             case ("05"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("content : " + parameters.get(0));
+                System.out.println("---------------------------------------------------------");
                 post(parameters.get(0));
                 break;
 
             case ("06"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("username : " + parameters.get(0));
+                System.out.println("content : " + parameters.get(1));
+                System.out.println("dateAndTimer : " + parameters.get(2));
+                System.out.println("---------------------------------------------------------");
                 pm(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("07"):
+                System.out.println("protocol---------------------------------------------------");
                 logstat();
                 break;
 
             case ("08"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("listOfUsernames : " + parameters.get(0));
+                System.out.println("---------------------------------------------------------");
                 stat(parameters.get(0));
                 break;
 
             case ("12"):
+                System.out.println("protocol---------------------------------------------------");
+                System.out.println("usernameToBlock : " + parameters.get(0));
+                System.out.println("---------------------------------------------------------");
                 block(parameters.get(0));
                 break;
         }
@@ -107,10 +138,10 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             User newUser = new User(username, password, birthday);
             connections.register(newUser);
             String message = "10" + "01";
-            connections.send(connectionHandlerId, message);
+//            connections.send(connectionHandlerId, message);
         } else {
             String error = "11" + "01";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
     }
 
@@ -124,7 +155,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             if (!user.getPassword().equals(password) || user.isConnected() || Integer.parseInt(captcha) != 1)
             {
                 String error = "11" + "02";
-                connections.send(connectionHandlerId, error);
+//                connections.send(connectionHandlerId, error);
             }
             else
             {
@@ -134,17 +165,17 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     connections.login(connectionHandlerId, user);
                     ConcurrentLinkedDeque<String> pendingMessages = user.getPendingMessages();
                     String ack = "1002";
-                    connections.send(connectionHandlerId, ack);
+//                    connections.send(connectionHandlerId, ack);
                     // sending to client all pending messages
                     while (!pendingMessages.isEmpty())
                     {
-                        connections.send(connectionHandlerId, pendingMessages.remove());
+//                        connections.send(connectionHandlerId, pendingMessages.remove());
                     }
                 }
                 else
                 {
                     String error = "1102";
-                    connections.send(connectionHandlerId,error);
+//                    connections.send(connectionHandlerId,error);
                 }
 
                 /*
@@ -160,7 +191,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         else
         {
             String error = "11" + "02";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
 
     }
@@ -169,10 +200,10 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         boolean ans = connections.logout(connectionHandlerId);
         if (!ans) {
             String error = "11" + "03";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         } else {
             String message = "10" + "03";
-            connections.send(connectionHandlerId, message);
+//            connections.send(connectionHandlerId, message);
         }
         terminate = true;
     }
@@ -183,12 +214,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         if (!ans)
         {
             String error = "11" + "04";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
         else
         {
             String message = "10" + "04" + username;
-            connections.send(connectionHandlerId,message);
+//            connections.send(connectionHandlerId,message);
         }
     }
 
@@ -210,7 +241,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     content = content.substring(0, indexOf) + content.substring(space+1);
                 }
                 else
-                stop = true;
+                    stop = true;
             }
 
             if (user.getConnectedHandlerID() != -1)
@@ -224,7 +255,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     int connectedId = u.getConnectedHandlerID();
                     if (connectedId != -1)
                     {
-                        connections.send(connectedId, messageString);
+//                        connections.send(connectedId, messageString);
                     }
                     else
                     {
@@ -238,7 +269,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     {
                         if (user1.getConnectedHandlerID() != -1)
                         {
-                            connections.send(user1.getConnectedHandlerID(), messageString);
+//                            connections.send(user1.getConnectedHandlerID(), messageString);
                         }
                         else
                         {
@@ -249,12 +280,12 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 //increment the number of posts the user posted
                 user.incrementPostsCount();
                 String ack = "10" + "05"; // TODO check
-                connections.send(connectionHandlerId,ack);
+//                connections.send(connectionHandlerId,ack);
             }
             else
             {
                 String error = "11" + "05";
-                connections.send(connectionHandlerId, error);
+//                connections.send(connectionHandlerId, error);
             }
         }
     }
@@ -279,7 +310,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                         String message = "09" + "0" + user.getUsername() +"\0" + filteredContent +"\0";
                         if (receivingUser.getConnectedHandlerID() != -1)
                         {
-                            connections.send(receivingUser.getConnectedHandlerID(), message);
+//                            connections.send(receivingUser.getConnectedHandlerID(), message);
                         }
                         else
                         {
@@ -287,24 +318,24 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                         }
                         //TODO check if this ack is needed
                         String ack = "10" + "06";
-                        connections.send(connectionHandlerId,ack);
+//                        connections.send(connectionHandlerId,ack);
                     }
                     else
                     {
                         String error = "11" + "06";
-                        connections.send(connectionHandlerId, error);
+//                        connections.send(connectionHandlerId, error);
                     }
                 }
                 else
                 {
                     String error = "11" + "06";
-                    connections.send(connectionHandlerId, error);
+//                    connections.send(connectionHandlerId, error);
                 }
             }
             else
             {
                 String error = "11" + "06";
-                connections.send(connectionHandlerId, error);
+//                connections.send(connectionHandlerId, error);
             }
         }
 
@@ -330,7 +361,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         if (logStatList == null)
         {
             String error = "11" + "07";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
         else
         {
@@ -338,7 +369,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             for (String s : logStatList)
                 returnString = returnString + s + "\n";
 
-            connections.send(connectionHandlerId, returnString);
+//            connections.send(connectionHandlerId, returnString);
         }
 
 
@@ -368,10 +399,10 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
             for (String s : stat) {
                 returningString = returningString + s + "\n";
             }
-            connections.send(connectionHandlerId, returningString);
+//            connections.send(connectionHandlerId, returningString);
         } else {
             String error = "11" + "08";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
 
     }
@@ -394,7 +425,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         else
         {
             String error = "11" + "12";
-            connections.send(connectionHandlerId, error);
+//            connections.send(connectionHandlerId, error);
         }
     }
 
