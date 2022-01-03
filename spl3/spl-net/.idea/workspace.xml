@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BGSclient/bin/connectionHandler.o" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/bin/connectionHandler.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/srv/BlockingConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/srv/BlockingConnectionHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,6 +142,7 @@
       <workItem from="1641147658789" duration="965000" />
       <workItem from="1641151726082" duration="1881000" />
       <workItem from="1641200788418" duration="2072000" />
+      <workItem from="1641220778839" duration="100000" />
     </task>
     <servers />
   </component>
