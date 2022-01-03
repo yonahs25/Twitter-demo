@@ -99,7 +99,9 @@ int main (int argc, char *argv[]) {
 
     bool shouldTerminate = true;
     writeTask write(shouldTerminate, connectionHandler);
+    readTask read(shouldTerminate, connectionHandler);
     thread t1(&writeTask::run, write);
+    thread t2(&readTask::run, read);
     t1.join();
 
 

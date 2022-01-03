@@ -19,7 +19,7 @@ ConnectionHandler::ConnectionHandler(string host, short port) : host_(host), por
 ConnectionHandler::~ConnectionHandler() {
     close();
 }
-short bytesToShort(char *bytesArr) {
+short bytesToShort(const char *bytesArr) {
     short result = (short) ((bytesArr[0] & 0xff) << 8);
     result += (short) (bytesArr[1] & 0xff);
     return result;
