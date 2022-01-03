@@ -354,6 +354,22 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             int space2 = frame.find_first_of(' ', space + 1);
             string userName = frame.substr(space + 1, space2 - space - 1);
             string OpAndUsername = Opcode + userName;
+            string OpAndUser = Opcode + userName;
+            string content = frame.substr(space2 + 1);
+            const char *first = OpAndUser.c_str();
+            const char *second = content.c_str();
+            int size = OpAndUser.size() + content.size() + 2;
+            char final[size];
+            for (int i = 0; i < OpAndUser.size() + 1; i++) {
+                final[i] = first[i];
+            }
+            int j = OpAndUser.size() + 1;
+            for (int i = 0; i < content.size() + 1; i++) {
+                final[j] = second[i];
+                j++;
+            } //[02username 0 password 1]
+            sent = sendBytes(final, size);
+
 
 
         } else if (!op.compare("STAT")) {
