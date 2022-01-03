@@ -61,7 +61,7 @@ bool ConnectionHandler::getBytes(char bytes[], unsigned int bytesToRead) {
 }
 
 bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
-    cout << bytes<<endl;
+//    cout << bytes<<endl;
     int tmp = 0;
     boost::system::error_code error;
     try {
@@ -83,9 +83,6 @@ bool ConnectionHandler::getLine(std::string &line) {
 
 bool ConnectionHandler::sendLine(std::string &line) {
     return sendFrameAscii(line, ';');
-}
-void doSome() {
-    cout << "hi" <<endl;
 }
 
 bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
@@ -295,6 +292,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             string password = frame.substr(space, space2 - space);
             space = space2 + 1;
             string dateOfBirth = frame.substr(space, frame.size() - space);
+
             const char *first = OpAndUser.c_str(); // [01username 0]
             const char *second = password.c_str(); //[password 0]
             const char *third = dateOfBirth.c_str(); // [25-10-1996 0]
@@ -326,7 +324,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             char captcha = frame.at(frame.size() - 1);
             const char *first = OpAndUser.c_str(); // [01username 0]
             const char *second = password.c_str(); //[password 0]
-            int size = OpAndUser.size() + password.size() + 2;
+            int size = OpAndUser.size() + password.size() + 3;
             char *final = new char[size];
             for (int i = 0; i < OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
@@ -337,6 +335,8 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
                 j++;
             } //[02username 0 password 1]
             final[size - 1] = captcha;
+            sent = sendBytes(final, size);
+
 
         } else if (!op.compare("FOLLOW")) {
             string Opcode = "04";
@@ -349,7 +349,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
 
             //need to send
         } else if (!op.compare("PM")) {
-            // PM username content
+            // TODO didnt finish
             string Opcode = "06";
             int space2 = frame.find_first_of(' ', space + 1);
             string userName = frame.substr(space + 1, space2 - space - 1);

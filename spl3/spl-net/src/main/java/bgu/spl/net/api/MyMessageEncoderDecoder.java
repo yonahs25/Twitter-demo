@@ -19,7 +19,6 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         if (nextByte == ';') {
             return popString();
         }
-        System.out.println(nextByte);
         pushByte(nextByte);
         return null; //not a line yet
     }

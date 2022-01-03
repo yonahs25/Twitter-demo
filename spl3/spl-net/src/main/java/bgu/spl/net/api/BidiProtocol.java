@@ -69,7 +69,9 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 break;
 
             case ("04"):
-                followUnfollow(parameters.get(0), parameters.get(1));
+                String ForU = parameters.get(0).substring(0,1);
+                String user  = parameters.get(0).substring(1);
+                followUnfollow(ForU ,user);
                 break;
 
             case ("05"):
