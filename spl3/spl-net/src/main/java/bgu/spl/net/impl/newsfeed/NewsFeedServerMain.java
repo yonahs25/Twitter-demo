@@ -16,7 +16,7 @@ public class NewsFeedServerMain {
 
 // you can use any server...
         Server.threadPerClient(
-                7777,
+                7776,
                 BidiProtocol::new,
                 MyMessageEncoderDecoder::new).serve();
 

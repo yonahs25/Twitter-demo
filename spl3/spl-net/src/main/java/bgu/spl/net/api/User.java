@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class User {
 
     private AtomicInteger connectedHandlerID;
-    private final ConcurrentLinkedDeque<User> followers = new ConcurrentLinkedDeque<>();
-    private final ConcurrentLinkedDeque<User> following = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<User> myFollowers = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<User> iFollowing = new ConcurrentLinkedDeque<>();
     private final ConcurrentLinkedDeque<User> blockedUsers = new ConcurrentLinkedDeque<>();
     private final ConcurrentLinkedDeque<String> pendingMessages = new ConcurrentLinkedDeque<>();
     private final String username;
@@ -49,6 +49,7 @@ public class User {
         int day = Integer.parseInt(birthDay.substring(0,2));
         int month = Integer.parseInt(birthDay.substring(3,5));
         int year = Integer.parseInt(birthDay.substring(6));
+
         // the date is 01-01-2022
         int ans = 2022-year;
         if(month > 1)
@@ -71,29 +72,29 @@ public class User {
 
 
 
-    public ConcurrentLinkedDeque<User> getFollowers() {
-        return followers;
+    public ConcurrentLinkedDeque<User> getMyFollowers() {
+        return myFollowers;
     }
 
-    public ConcurrentLinkedDeque<User> getFollowing() {
-        return following;
+    public ConcurrentLinkedDeque<User> getFromIFollowing() {
+        return iFollowing;
     }
 
     public ConcurrentLinkedDeque<User> getBlockedUsers() {
         return blockedUsers;
     }
 
-    public void addFollower (User user){
-        followers.add(user);
+    public void addToMyFollower (User user){
+        myFollowers.add(user);
     }
 
-    public void addFollowing(User user){
-        following.add(user);
+    public void addToIFollowing(User user){
+        iFollowing.add(user);
     }
 
-    public void removerFollower(User user) {followers.remove(user);}
+    public void removerFromMyFollower(User user) {myFollowers.remove(user);}
 
-    public void removeFollowing(User user) {following.remove(user);}
+    public void removeFromIFollowing(User user) {iFollowing.remove(user);}
 
     public ConcurrentLinkedDeque<String> getPendingMessages() {
         return pendingMessages;
@@ -104,7 +105,7 @@ public class User {
     public void incrementPostsCount() {amountOfPosts++;}
 
     public String getData() {
-        return (age + " " + amountOfPosts + " " + followers.size() + " " + following.size());
+        return (age + " " + amountOfPosts + " " + myFollowers.size() + " " + iFollowing.size());
     }
 
     public void addToBlockingList(User userToBlock){

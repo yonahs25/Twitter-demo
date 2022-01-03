@@ -27,24 +27,25 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         ArrayList<Byte> ans = new ArrayList<>(alwaysAdd);
         int nextBackslashN = message.indexOf('\n');
         message = message.substring(nextBackslashN+1);
+        System.out.println(message);
         int space ;
         int prevSpace;
         nextBackslashN = message.indexOf('\n');
         while (nextBackslashN != -1) {
             space = message.indexOf(' ');
             byte[] one = shortToBytes(Short.parseShort(message.substring(0,space)));
-            System.out.println(Arrays.toString(one));
+//            System.out.println(Arrays.toString(one));
             prevSpace = space+1;
             space = message.indexOf(' ', prevSpace);
             byte[] two = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-            System.out.println(Arrays.toString(two));
+//            System.out.println(Arrays.toString(two));
             prevSpace = space+1;
             space = message.indexOf(' ', prevSpace);
             byte[] three = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-            System.out.println(Arrays.toString(three));
+//            System.out.println(Arrays.toString(three));
             prevSpace = space+1;
             byte[] four = shortToBytes(Short.parseShort(message.substring(prevSpace,nextBackslashN)));
-            System.out.println(Arrays.toString(four) + '\n');
+//            System.out.println(Arrays.toString(four) + '\n');
             message = message.substring(nextBackslashN+1);
             nextBackslashN = message.indexOf('\n');
             ans.add(one[0]);
@@ -55,12 +56,14 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
             ans.add(three[1]);
             ans.add(four[0]);
             ans.add(four[1]);
-            nextBackslashN = message.indexOf('\n', nextBackslashN+1);
+            nextBackslashN = message.indexOf('\n', nextBackslashN);
+            System.out.println(nextBackslashN);
         }
         byte[] toR = new byte[ans.size() + 1];
-        for(int i=0; i <toR.length; i++) toR[i] = ans.get(i);
-        toR[ans.size()-1] = ";".getBytes(StandardCharsets.UTF_8)[0];
-
+        for(int i=0; i <toR.length-1; i++) toR[i] = ans.get(i);
+        toR[ans.size()] = ";".getBytes(StandardCharsets.UTF_8)[0];
+//        System.out.println(Arrays.toString(toR));
+        System.out.println(new String(toR, 0 ,toR.length));
         return toR;
     }
     @Override

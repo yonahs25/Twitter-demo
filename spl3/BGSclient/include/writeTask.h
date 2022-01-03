@@ -21,6 +21,7 @@ private:
 public:
     writeTask(bool &shouldTerminate, ConnectionHandler &con);
     void run();
+
 };
 
 

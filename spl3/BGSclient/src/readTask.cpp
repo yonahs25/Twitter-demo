@@ -16,12 +16,14 @@ void readTask::run() {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 break;
             }
-            int len=answer.length();
-            answer.resize(len-1);
+            //int len=answer.length();
+//            answer.resize(len-1);
             cout<< answer << endl;
             if(answer == "ACK 3")
                 break;
         }
+
+
 
 }
 

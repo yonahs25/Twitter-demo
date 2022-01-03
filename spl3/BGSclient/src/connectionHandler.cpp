@@ -24,6 +24,26 @@ short bytesToShort(const char *bytesArr) {
     result += (short) (bytesArr[1] & 0xff);
     return result;
 }
+string addZero(int x){
+    if(x<10)
+        return "0"+ to_string(x);
+
+    return to_string(x);
+
+}
+string DateAndTime(){
+    time_t theTime = time(nullptr);
+    struct tm *aTime = localtime((&theTime));
+    int day = aTime->tm_mday;
+    int month = aTime->tm_mon+1;
+    int year = aTime->tm_year+1900;
+    int hour = aTime->tm_hour;
+    int minutes = aTime->tm_min;
+    string ans = addZero(day)+"-"+ addZero(month)+"-"+ to_string(year) + " "
+                 + addZero(hour)+":"+ addZero(minutes);
+    return "a";
+}
+
 
 bool ConnectionHandler::connect() {
     std::cout << "Starting connect to "
@@ -61,7 +81,6 @@ bool ConnectionHandler::getBytes(char bytes[], unsigned int bytesToRead) {
 }
 
 bool ConnectionHandler::sendBytes(const char bytes[], int bytesToWrite) {
-//    cout << bytes<<endl;
     int tmp = 0;
     boost::system::error_code error;
     try {
@@ -87,6 +106,7 @@ bool ConnectionHandler::sendLine(std::string &line) {
 
 bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
     char ch[2];
+    char c;
 
     // Stop when we encounter the null character. 
     // Notice that the null character is not appended to the frame string.
@@ -101,8 +121,8 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
     }
 
     //notification
-    if (!frame.compare("09")) {
-        char c;
+    if (ch[0] == '0' && ch[1] == '9') {
+
         try {
             do {
                 getBytes(&c, 1);
@@ -112,10 +132,11 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
             std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
             return false;
         }
+        frame.resize(frame.size()-1);
         string op = "NOTIFICATION";
         string type;
         if (frame.at(2) == '0') type = "PM";
-        else type == "Public";
+        else type = "Public";
         c = '\0';
         int space = frame.find_first_of(c);
         // [091string0]
@@ -125,8 +146,7 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
         frame = newFrame;
     }
         //error
-    else if (!frame.compare("11")) { //TODO mistake, need to ignore 0
-        char c;
+    else if (ch[0] == '1' && ch[1] == '1') { //TODO mistake, need to ignore 0
         try {
             do {
                 getBytes(&c, 1);
@@ -148,74 +168,46 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
     }
         //ack
     else {
+        string ans;
         try {
             getBytes(ch, 2);
         } catch (std::exception &e) {
             std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
             return false;
         }
-        if (!frame.substr(2, 2).compare("01")) {
-            string new_frame = "ACK 1";
-            frame = new_frame;
-        } else if (!frame.substr(2, 2).compare("02")) {
-            string new_frame = "ACK 2";
-            frame = new_frame;
-        } else if (!frame.substr(2, 2).compare("03")) {
-            string new_frame = "ACK 3";
-            frame = new_frame;
-        } else if (!frame.substr(2, 2).compare("04")) {
-            string new_frame = "ACK 4";
-            frame = new_frame;
-        } else if (!frame.substr(2, 2).compare("07")) {
-            string alwaysAdd = "ACK 07 ";
-            string ans;
+        if ((ch[1] != '7') && (ch[1] != '8')){
             char c;
             try {
-                getBytes(&c, 1);
+                do {
+                    getBytes(&c, 1);
+                }while (c!=delimiter);
             } catch (std::exception &e) {
                 std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
                 return false;
             }
-            while (delimiter != c) {
-                ch[0] = c;
-                try {
-                    getBytes(&c, 1);
-                } catch (std::exception &e) {
-                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-                    return false;
-                }
-                ch[1] = c;
-                short one = bytesToShort(ch);
-                try {
-                    getBytes(ch, 2);
-                } catch (std::exception &e) {
-                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-                    return false;
-                }
-                short two = bytesToShort(ch);
-
-                try {
-                    getBytes(ch, 2);
-                } catch (std::exception &e) {
-                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-                    return false;
-                }
-                short three = bytesToShort(ch);
-                try {
-                    getBytes(ch, 2);
-                } catch (std::exception &e) {
-                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
-                    return false;
-                }
-                short four = bytesToShort(ch);
-                ans = ans + alwaysAdd + to_string(one) + " " + to_string(two) +
-                        " " + to_string(three) + " " + to_string(four) + '\n';
-            }
-            frame = ans;
-        } else if (!frame.substr(2, 2).compare("08")) {
-            string alwaysAdd = "ACK 08 ";
+        }
+        //if (!frame.substr(2, 2).compare("01")) {
+        if (ch[0] == '0' && ch[1] == '1'){
+            string new_frame = "ACK 1";
+            frame = new_frame;
+        } else if (ch[0] == '0' && ch[1] == '2') {
+            string new_frame = "ACK 2";
+            frame = new_frame;
+        } else if (ch[0] == '0' && ch[1] == '3') {
+            string new_frame = "ACK 3";
+            frame = new_frame;
+        } else if (ch[0] == '0' && ch[1] == '4') {
+            string new_frame = "ACK 4";
+            frame = new_frame;
+        }else if (ch[0] == '0' && ch[1] == '5') {
+            string new_frame = "ACK 5";
+            frame = new_frame;
+        }else if (ch[0] == '0' && ch[1] == '6') {
+            string new_frame = "ACK 6";
+            frame = new_frame;
+        } else if (ch[0] == '0' && ch[1] == '7') {
+            string alwaysAdd = "ACK 07 ";
             string ans;
-            char c;
             try {
                 getBytes(&c, 1);
             } catch (std::exception &e) {
@@ -256,7 +248,66 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
                 short four = bytesToShort(ch);
                 ans = ans + alwaysAdd + to_string(one) + " " + to_string(two) +
                       " " + to_string(three) + " " + to_string(four) + '\n';
+                try {
+                    getBytes(&c, 1);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
             }
+            ans.resize(ans.size()-1);
+            frame = ans;
+        } else if (ch[0] == '0' && ch[1] == '8') {
+            string alwaysAdd = "ACK 08 ";
+            string ans;
+            try {
+                getBytes(&c, 1);
+            } catch (std::exception &e) {
+                std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                return false;
+            }
+            while (delimiter != c) {
+                ch[0] = c;
+                try {
+                    getBytes(&c, 1);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                ch[1] = c;
+                short one = bytesToShort(ch);
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short two = bytesToShort(ch);
+
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short three = bytesToShort(ch);
+                try {
+                    getBytes(ch, 2);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+                short four = bytesToShort(ch);
+                ans = ans + alwaysAdd + to_string(one) + " " + to_string(two) +
+                      " " + to_string(three) + " " + to_string(four) + '\n';
+                try {
+                    getBytes(&c, 1);
+                } catch (std::exception &e) {
+                    std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                    return false;
+                }
+            }
+            ans.resize(ans.size()-1);
             frame = ans;
         }
     }
