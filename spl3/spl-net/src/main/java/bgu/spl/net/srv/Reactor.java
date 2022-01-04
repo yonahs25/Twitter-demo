@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 
 public class Reactor<T> implements Server<T> {
 
+
+    private int id = 0;
     private final int port;
     private final Supplier<MessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> readerFactory;

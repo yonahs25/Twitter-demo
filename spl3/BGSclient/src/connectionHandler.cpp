@@ -1,5 +1,4 @@
 #include <connectionHandler.h>
-#include <sstream>
 #include <iostream>
 #include <string>
 #include <stdlib.h>
@@ -41,7 +40,7 @@ string DateAndTime(){
     int minutes = aTime->tm_min;
     string ans = addZero(day)+"-"+ addZero(month)+"-"+ to_string(year) + " "
                  + addZero(hour)+":"+ addZero(minutes);
-    return "a";
+    return ans;
 }
 
 
@@ -400,16 +399,17 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
 
             //need to send
         } else if (!op.compare("PM")) {
-            // TODO didnt finish
             string Opcode = "06";
             int space2 = frame.find_first_of(' ', space + 1);
             string userName = frame.substr(space + 1, space2 - space - 1);
             string OpAndUsername = Opcode + userName;
             string OpAndUser = Opcode + userName;
             string content = frame.substr(space2 + 1);
+            string dateAndTime = DateAndTime();
             const char *first = OpAndUser.c_str();
             const char *second = content.c_str();
-            int size = OpAndUser.size() + content.size() + 2;
+            const char *third = dateAndTime.c_str();
+            int size = OpAndUser.size() + content.size() + dateAndTime.size() +3;
             char final[size];
             for (int i = 0; i < OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
@@ -419,9 +419,14 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
                 final[j] = second[i];
                 j++;
             } //[02username 0 password 1]
+            j = OpAndUser.size() + 2 + content.size();
+            for (int i = 0; i < dateAndTime.size() + 1; i++) {
+                final[j] = third[i];
+                j++;
+            }
+            cout <<final<< endl;
+
             sent = sendBytes(final, size);
-
-
 
         } else if (!op.compare("STAT")) {
             string Opcode = "08";

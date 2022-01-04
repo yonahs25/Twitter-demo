@@ -12,6 +12,7 @@ readTask::readTask(bool &shouldTerminate, ConnectionHandler &con):shouldTerminat
 void readTask::run() {
         while(true){
             string answer;
+
             if (!connectionHandler.getLine(answer)) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 break;
@@ -20,7 +21,9 @@ void readTask::run() {
 //            answer.resize(len-1);
             cout<< answer << endl;
             if(answer == "ACK 3")
-                break;
+                terminate();
+
+
         }
 
 

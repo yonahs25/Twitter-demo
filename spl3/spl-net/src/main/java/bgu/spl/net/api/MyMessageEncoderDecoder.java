@@ -27,7 +27,6 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         ArrayList<Byte> ans = new ArrayList<>(alwaysAdd);
         int nextBackslashN = message.indexOf('\n');
         message = message.substring(nextBackslashN+1);
-        System.out.println(message);
         int space ;
         int prevSpace;
         nextBackslashN = message.indexOf('\n');
@@ -63,7 +62,6 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         for(int i=0; i <toR.length-1; i++) toR[i] = ans.get(i);
         toR[ans.size()] = ";".getBytes(StandardCharsets.UTF_8)[0];
 //        System.out.println(Arrays.toString(toR));
-        System.out.println(new String(toR, 0 ,toR.length));
         return toR;
     }
     @Override

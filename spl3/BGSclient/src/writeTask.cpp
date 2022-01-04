@@ -14,6 +14,7 @@ void writeTask::run() {
         char buf[1024];
         std::cin.getline(buf, 1024);
         std::string line(buf);
+
         if (!connectionHandler.sendLine(line)) {
             std::cout << "Disconnected. Exiting...\n" << std::endl;
             break;

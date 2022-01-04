@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../BGSclient/bin/BGRSclient" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/bin/BGRSclient" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/BGSclient.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../BGSclient/src/connectionHandler.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spl-net.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/BidiProtocol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/api/connectionImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/srv/BlockingConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgu/spl/net/srv/BlockingConnectionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bgu/spl/net/api/BidiProtocol.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bgu/spl/net/api/BidiProtocol.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bgu/spl/net/api/connectionImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bgu/spl/net/api/connectionImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +151,8 @@
       <workItem from="1641151726082" duration="1881000" />
       <workItem from="1641200788418" duration="2072000" />
       <workItem from="1641220778839" duration="100000" />
-      <workItem from="1641223434044" duration="14655000" />
+      <workItem from="1641223434044" duration="16088000" />
+      <workItem from="1641296024197" duration="5193000" />
     </task>
     <servers />
   </component>

@@ -47,7 +47,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
                     //    out.write(encdec.encode(response));
                     //    out.flush();
                     //}
-                    System.out.println("@" + nextMessage + "@");
                     protocol.process(nextMessage);
                 }
             }
