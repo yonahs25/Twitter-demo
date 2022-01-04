@@ -179,15 +179,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     String error = "1102";
                     connections.send(connectionHandlerId,error);
                 }
-
-                /*
-                connections.login(connectionHandlerId, user);
-                user.setConnectedHandlerID(connectionHandlerId);
-                ConcurrentLinkedDeque<String> pendingMessages = user.getPendingMessages();
-                while (user.getConnectedHandlerID() != -1 && !pendingMessages.isEmpty()) {
-                    connections.send(connectionHandlerId, pendingMessages.remove());
-                }
-                */
             }
         }
         else
@@ -309,6 +300,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 {
                     //need to check the content
                     // the user must follow the receivingUser
+                    //block safe
                     ConcurrentLinkedDeque<User> followingList = user.getMyFollowers();
                     if (!content.equals("") && followingList.contains(receivingUser))
                     {
@@ -350,20 +342,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     private void logstat()
     {
-        /*
-        User user = connections.getConnectedUser(connectionHandlerId);
-        if (user != null && user.getConnectedHandlerID() != -1) { // why double checking
-            LinkedList<String> logStatList = connections.logStat(connectionHandlerId);
-            String returnString = "";
-            for (String s : logStatList) {
-                returnString = returnString + "10" + "07" + s + "\n";
-            }
-            connections.send(connectionHandlerId, returnString);
-        } else {
-            String error = "11" + "07";
-            connections.send(connectionHandlerId, error);
-        }
-         */
         LinkedList<String> logStatList = connections.logStat(connectionHandlerId);
         if (logStatList == null)
         {
@@ -378,8 +356,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             connections.send(connectionHandlerId, returnString);
         }
-
-
 
     }
 
@@ -425,18 +401,19 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
 
             User user = connections.getConnectedUser(connectionHandlerId);
-            if(user != null) {
-                user.getMyFollowers().remove(userToBlock);
-                user.getFromIFollowing().remove(userToBlock);
-                userToBlock.getMyFollowers().remove(user);
-                userToBlock.getFromIFollowing().remove(user);
-                user.addToBlockingList(userToBlock);
+            if(user != null)
+            {
+                user.getMyFollowers().remove(userToBlock); // remove otherUser from the users that follow me
+                user.getFromIFollowing().remove(userToBlock); // remove otherUser from the users I follow
+                userToBlock.getMyFollowers().remove(user); // remove me from the users that follow otherUser
+                userToBlock.getFromIFollowing().remove(user); // remove me from the users that otherUser follow
+                user.addToBlockingList(userToBlock); // add otherUser to my blocked users
             }
         }
         else
         {
             String error = "11" + "12";
-//            connections.send(connectionHandlerId, error);
+            connections.send(connectionHandlerId, error);
         }
     }
 

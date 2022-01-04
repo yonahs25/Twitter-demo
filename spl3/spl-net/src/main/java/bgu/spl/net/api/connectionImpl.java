@@ -162,13 +162,18 @@ public class connectionImpl<T> implements Connections<T> {
     }
 
     public LinkedList<String> logStat (int id){
-        if(idToUser.get(id) == null)
+        User connectedUser = idToUser.get(id);
+        if(connectedUser == null)
             return null;
 
         LinkedList<String> ans = new LinkedList<>();
-        for (User user : usernameToUserImpl.values()){
+        for (User user : usernameToUserImpl.values())
+        {
             if(user.getConnectedHandlerID() == id)  continue;
-            ans.add(user.getData());
+                //TODO need to check if otherUser blocked me?
+            if (!connectedUser.getBlockedUsers().contains(user))
+                ans.add(user.getData());
+
         }
         return  ans;
     }
@@ -176,13 +181,16 @@ public class connectionImpl<T> implements Connections<T> {
 
     //STAT call needs int id && LinkedList of String
     public LinkedList<String> stat(int id, LinkedList<String> usernamesList){
-        if(idToUser.get(id) == null)
+        User connectedUser = idToUser.get(id);
+        if(connectedUser == null)
             return null;
         LinkedList<String> statsList = new LinkedList<>();
         for (String username : usernamesList) {
             User user = usernameToUserImpl.get(username);
             if (user == null)
                 return null;
+            //TODO need to check if otherUser blocked me?
+            if(!connectedUser.getBlockedUsers().contains(user))
             statsList.add(user.getData());
         }
 

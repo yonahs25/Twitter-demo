@@ -1,5 +1,7 @@
 package bgu.spl.net.api;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,14 +14,12 @@ public class User {
     private final ConcurrentLinkedDeque<String> pendingMessages = new ConcurrentLinkedDeque<>();
     private final String username;
     private final String password;
-    private String birthDay;
     private final int age;
     private int amountOfPosts = 0;
 
     public User(String username, String password, String birthDay) {
         this.username = username;
         this.password = password;
-        this.birthDay = birthDay;
         age = calculateAge(birthDay);
         connectedHandlerID = new AtomicInteger(-1);
     }
@@ -49,14 +49,9 @@ public class User {
         int day = Integer.parseInt(birthDay.substring(0,2));
         int month = Integer.parseInt(birthDay.substring(3,5));
         int year = Integer.parseInt(birthDay.substring(6));
-
-        // the date is 01-01-2022
-        int ans = 2022-year;
-        if(month > 1)
-            ans--;
-        if(month == 1 && day > 1)
-            ans--;
-        return ans;
+        LocalDate now = LocalDate.now();
+        LocalDate age = LocalDate.of(year, month, day);
+        return Period.between(age,now).getYears();
     }
     public int getAge(){
         return age;
