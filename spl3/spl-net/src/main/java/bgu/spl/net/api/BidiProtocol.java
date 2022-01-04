@@ -2,7 +2,7 @@ package bgu.spl.net.api;
 
 import bgu.spl.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl.net.api.bidi.Connections;
-import bgu.spl.net.api.bidi.messageStructure;
+import bgu.spl.net.api.messageStructure;
 import bgu.spl.net.srv.BaseServer;
 
 import java.nio.charset.StandardCharsets;
@@ -307,8 +307,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                     //need to check the content
                     // the user must follow the receivingUser
                     //block safe
-                    ConcurrentLinkedDeque<User> followingList = user.getMyFollowers();
-                    if (!content.equals("") && followingList.contains(receivingUser))
+                    ConcurrentLinkedDeque<User> iFollow = user.getFromIFollowing();
+                    if (!content.equals("") && iFollow.contains(receivingUser))
                     {
                         String filteredContent = messageStructure.getInstance().filter(content);
                         messageStructure.getInstance().insertMessage(filteredContent);
@@ -323,6 +323,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                             receivingUser.addToPendingMessages(message);
                         }
                         //TODO check if this ack is needed
+
                         String ack = "10" + "06";
                         connections.send(connectionHandlerId,ack);
                     }

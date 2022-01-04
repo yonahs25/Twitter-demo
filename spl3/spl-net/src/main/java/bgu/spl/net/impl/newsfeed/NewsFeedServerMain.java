@@ -10,7 +10,13 @@ public class NewsFeedServerMain {
         NewsFeed feed = new NewsFeed(); //one shared object
 
 // you can use any server...
-        Server.threadPerClient(
+//        Server.threadPerClient(
+//                7776,
+//                BidiProtocol::new,
+//                MyMessageEncoderDecoder::new).serve();
+
+        Server.reactor(
+                Runtime.getRuntime().availableProcessors(),
                 7776,
                 BidiProtocol::new,
                 MyMessageEncoderDecoder::new).serve();

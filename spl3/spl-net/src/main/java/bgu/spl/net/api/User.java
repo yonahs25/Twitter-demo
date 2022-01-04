@@ -53,9 +53,6 @@ public class User {
         LocalDate age = LocalDate.of(year, month, day);
         return Period.between(age,now).getYears();
     }
-    public int getAge(){
-        return age;
-    }
 
     public String getUsername() {
         return username;
@@ -64,8 +61,6 @@ public class User {
     public String getPassword() {
         return password;
     }
-
-
 
     public ConcurrentLinkedDeque<User> getMyFollowers() {
         return myFollowers;
@@ -98,6 +93,8 @@ public class User {
     public void addToPendingMessages (String message) {pendingMessages.add(message);}
 
     public void incrementPostsCount() {amountOfPosts++;}
+
+    public void incrementPmCount() {}
 
     public String getData() {
         return (age + " " + amountOfPosts + " " + myFollowers.size() + " " + iFollowing.size());

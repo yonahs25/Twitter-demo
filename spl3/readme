@@ -1,0 +1,36 @@
+how to run project:
+
+- TPC server:
+mvn clean
+mvn compile
+mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.BGSServer.TPCMain" -Dexec.args="7777"
+
+- Reactor
+mvn clean
+mvn compile
+mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.BGSServer.ReactorMain" -Dexec.args="7777 5"
+
+- client
+make clean
+make
+./bin/BGRSclient 127.0.0.1 7777
+
+
+Input Examples:
+- REGISTER yonah solomon 25-10-1996
+-LOGIN yonah solomon 1
+-LOGOUT
+-FOLLOW 0 vlad
+-POST @vlad this is the post
+-PM vlad hello there
+-LOGSTAT
+-STAT vlad|extraMan
+-BLOCK vlad
+
+
+FilteredWords:
+api messageStructure (in the string[])
+
+Thank you
+
+

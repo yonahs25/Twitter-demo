@@ -1,4 +1,4 @@
-package bgu.spl.net.api.bidi;
+package bgu.spl.net.api;
 
 import bgu.spl.net.api.connectionImpl;
 
