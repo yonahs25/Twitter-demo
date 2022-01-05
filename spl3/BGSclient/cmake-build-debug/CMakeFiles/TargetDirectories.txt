@@ -1,3 +1,0 @@
-/home/yona/Desktop/spl3Work/spl3/BGSclient/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/yona/Desktop/spl3Work/spl3/BGSclient/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/yona/Desktop/spl3Work/spl3/BGSclient/cmake-build-debug/CMakeFiles/BGSclient.dir
