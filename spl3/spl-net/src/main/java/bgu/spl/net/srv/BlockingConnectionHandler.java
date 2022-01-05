@@ -26,7 +26,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
         this.id=id;
     }
 
-
     @Override
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
@@ -37,16 +36,10 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
 
-//            protocol.start(id,protocol.getC);
-//            out = new BufferedOutputStream(sock.getOutputStream());
+
             while (!protocol.shouldTerminate() && (read = in.read()) >= 0) {
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
-                    //T response = protocol.process(nextMessage);
-                    //if (response != null) {
-                    //    out.write(encdec.encode(response));
-                    //    out.flush();
-                    //}
                     protocol.process(nextMessage);
                 }
             }
@@ -55,7 +48,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
         }
 
     }
-
 
     @Override
     public void send(T msg) {
@@ -66,7 +58,6 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void close() throws IOException {

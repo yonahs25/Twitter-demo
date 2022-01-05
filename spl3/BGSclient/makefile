@@ -1,10 +1,10 @@
 CFLAGS:=-c -Wall -Weffc++ -g -std=c++11 -Iinclude
 LDFLAGS:=-lboost_system -pthread
 
-all: bin/BGRSclient
+all: bin/BGSclient
 
-bin/BGRSclient: bin/BGSclient.o bin/connectionHandler.o bin/writeTask.o bin/readTask.o
-	g++ -o bin/BGRSclient bin/BGSclient.o bin/connectionHandler.o bin/writeTask.o bin/readTask.o $(LDFLAGS)
+bin/BGSclient: bin/BGSclient.o bin/connectionHandler.o bin/writeTask.o bin/readTask.o
+	g++ -o bin/BGSclient bin/BGSclient.o bin/connectionHandler.o bin/writeTask.o bin/readTask.o $(LDFLAGS)
 
 bin/BGSclient.o: src/BGSclient.cpp
 	g++ $(CFLAGS) -o bin/BGSclient.o src/BGSclient.cpp

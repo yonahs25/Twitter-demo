@@ -11,13 +11,13 @@
 
 class readTask{
 private:
-    bool& shouldTerminate;
     ConnectionHandler &connectionHandler;
+    int& currentState;
 
 
 
 public:
-    readTask(bool &shouldTerminate, ConnectionHandler &con);
+    readTask(int &currentState, ConnectionHandler &con);
     void run();
 };
 

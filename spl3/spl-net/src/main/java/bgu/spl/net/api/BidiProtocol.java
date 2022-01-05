@@ -28,7 +28,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
     @Override
     public void process(String message) {
-        System.out.println(message);
+//        System.out.println(message);
         char zeroChar = 0;
         int start = 2;
         int end = 2;
@@ -57,71 +57,42 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
         switch (opcode) {
             case ("01"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("username : " + parameters.get(0));
-//                System.out.println("password : " + parameters.get(1));
-//                System.out.println("birthday : " + parameters.get(2));
-//                System.out.println("---------------------------------------------------------");
                 register(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("02"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("username : " + parameters.get(0));
-//                System.out.println("password : " + parameters.get(1));
-//                System.out.println("captcha : " + parameters.get(2));
-//                System.out.println("---------------------------------------------------------");
+
                 login(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("03"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("---------------------------------------------------------");
+
                 logout();
                 break;
 
             case ("04"):
-//                System.out.println("protocol---------------------------------------------------");
                 String ForU = parameters.get(0).substring(0,1);
                 String user  = parameters.get(0).substring(1);
-//                System.out.println("f/u : " + ForU);
-//                System.out.println("username : " + user);
-//                System.out.println("---------------------------------------------------------");
                 followUnfollow(ForU ,user);
                 break;
 
             case ("05"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("content : " + parameters.get(0));
-//                System.out.println("---------------------------------------------------------");
                 post(parameters.get(0));
                 break;
 
             case ("06"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("username : " + parameters.get(0));
-//                System.out.println("content : " + parameters.get(1));
-//                System.out.println("dateAndTimer : " + parameters.get(2));
-//                System.out.println("---------------------------------------------------------");
                 pm(parameters.get(0), parameters.get(1), parameters.get(2));
                 break;
 
             case ("07"):
-//                System.out.println("protocol---------------------------------------------------");
                 logstat();
                 break;
 
             case ("08"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("listOfUsernames : " + parameters.get(0));
-//                System.out.println("---------------------------------------------------------");
                 stat(parameters.get(0));
                 break;
 
             case ("12"):
-//                System.out.println("protocol---------------------------------------------------");
-//                System.out.println("usernameToBlock : " + parameters.get(0));
-//                System.out.println("---------------------------------------------------------");
                 block(parameters.get(0));
                 break;
         }
@@ -196,6 +167,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         } else {
             String message = "10" + "03";
             connections.send(connectionHandlerId, message);
+            connections.disconnect(connectionHandlerId);
             terminate = true;
         }
     }
@@ -210,7 +182,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         }
         else
         {
-            String message = "10" + "04" + username;
+            String message = "10" + "04" + followOrUnfollow + username;
             connections.send(connectionHandlerId,message);
         }
     }
@@ -242,11 +214,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 else
                     stop = true;
             }
-//            System.out.println("the content is : " + content);
-//            System.out.println("usernames:");
-            for (String s : usersStrings){
-//                System.out.println(s);
-            }
 
             if (user.getConnectedHandlerID() != -1)
             {
@@ -269,7 +236,8 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 for (String name : usersStrings)
                 {
                     User user1 = connections.getUser(name);
-                    if (user1 != null && !user.getBlockedUsers().contains(user1) && !user1.getBlockedUsers().contains(user))
+                    if (user1 != null && !user.getBlockedUsers().contains(user1) && !user1.getBlockedUsers().contains(user)
+                            && !user.getMyFollowers().contains(user1))
                     {
                         if (user1.getConnectedHandlerID() != -1)
                         {
@@ -283,7 +251,7 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                 }
                 //increment the number of posts the user posted
                 user.incrementPostsCount();
-                String ack = "10" + "05"; // TODO check
+                String ack = "10" + "05";
                 connections.send(connectionHandlerId,ack);
             }
             else
@@ -322,7 +290,6 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
                         {
                             receivingUser.addToPendingMessages(message);
                         }
-                        //TODO check if this ack is needed
 
                         String ack = "10" + "06";
                         connections.send(connectionHandlerId,ack);
@@ -388,14 +355,18 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
 
             }
             LinkedList<String> stat = connections.stat(connectionHandlerId, userNames);
-            if (!stat.isEmpty()){
+            if (stat != null && !stat.isEmpty()){
             String returningString = "1008\n";
             for (String s : stat) {
                 returningString = returningString + s + "\n";
             }
-//            System.out.println( "need to be returned : " + returningString);
             connections.send(connectionHandlerId, returningString);
         }
+            else
+            {
+                String error = "11" + "08";
+                connections.send(connectionHandlerId, error);
+            }
         } else {
             String error = "11" + "08";
             connections.send(connectionHandlerId, error);
@@ -410,13 +381,22 @@ public class BidiProtocol implements BidiMessagingProtocol<String> {
         {
 
             User user = connections.getConnectedUser(connectionHandlerId);
-            if(user != null)
+            if(user != null )
             {
-                user.getMyFollowers().remove(userToBlock); // remove otherUser from the users that follow me
-                user.getFromIFollowing().remove(userToBlock); // remove otherUser from the users I follow
-                userToBlock.getMyFollowers().remove(user); // remove me from the users that follow otherUser
-                userToBlock.getFromIFollowing().remove(user); // remove me from the users that otherUser follow
-                user.addToBlockingList(userToBlock); // add otherUser to my blocked users
+                if(user.getBlockedUsers().contains(userToBlock))
+                {
+                    String error = "11" + "12";
+                    connections.send(connectionHandlerId, error);
+                }
+                    else {
+                    user.getMyFollowers().remove(userToBlock); // remove otherUser from the users that follow me
+                    user.getFromIFollowing().remove(userToBlock); // remove otherUser from the users I follow
+                    userToBlock.getMyFollowers().remove(user); // remove me from the users that follow otherUser
+                    userToBlock.getFromIFollowing().remove(user); // remove me from the users that otherUser follow
+                    user.addToBlockingList(userToBlock); // add otherUser to my blocked users
+                    String ack = "1012";
+                    connections.send(connectionHandlerId, ack);
+                }
             }
         }
         else

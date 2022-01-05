@@ -33,18 +33,14 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
         while (nextBackslashN != -1) {
             space = message.indexOf(' ');
             byte[] one = shortToBytes(Short.parseShort(message.substring(0,space)));
-//            System.out.println(Arrays.toString(one));
             prevSpace = space+1;
             space = message.indexOf(' ', prevSpace);
             byte[] two = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-//            System.out.println(Arrays.toString(two));
             prevSpace = space+1;
             space = message.indexOf(' ', prevSpace);
             byte[] three = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-//            System.out.println(Arrays.toString(three));
             prevSpace = space+1;
             byte[] four = shortToBytes(Short.parseShort(message.substring(prevSpace,nextBackslashN)));
-//            System.out.println(Arrays.toString(four) + '\n');
             message = message.substring(nextBackslashN+1);
             nextBackslashN = message.indexOf('\n');
             ans.add(one[0]);
@@ -56,12 +52,10 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
             ans.add(four[0]);
             ans.add(four[1]);
             nextBackslashN = message.indexOf('\n', nextBackslashN);
-            System.out.println(nextBackslashN);
         }
         byte[] toR = new byte[ans.size() + 1];
         for(int i=0; i <toR.length-1; i++) toR[i] = ans.get(i);
         toR[ans.size()] = ";".getBytes(StandardCharsets.UTF_8)[0];
-//        System.out.println(Arrays.toString(toR));
         return toR;
     }
     @Override
@@ -71,44 +65,7 @@ public class MyMessageEncoderDecoder implements MessageEncoderDecoder<String>{
             ArrayList<Byte> ans = new ArrayList<>(); //check if to remove
             byte[] x = message.substring(0,4).getBytes(StandardCharsets.UTF_8);
             ArrayList<Byte> alwaysAdd = new ArrayList<>();
-            //ans.addAll(alwaysAdd);
-            for (int i=0; i<x.length;i++)  alwaysAdd.add(x[i]);
-            /*
-            // ------------------------------------
-            int space = message.indexOf(' ');
-            int prevSpace;
-            int nextBackslashN = message.indexOf('\n');
-            while (nextBackslashN != -1) {
-                ans.addAll(alwaysAdd);
-                byte[] one = shortToBytes(Short.parseShort(message.substring(4,space)));
-                System.out.println(Arrays.toString(one));
-                prevSpace = space+1;
-                space = message.indexOf(' ', prevSpace);
-                byte[] two = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-                System.out.println(Arrays.toString(two));
-                prevSpace = space+1;
-                space = message.indexOf(' ', prevSpace);
-                byte[] three = shortToBytes(Short.parseShort(message.substring(prevSpace,space)));
-                System.out.println(Arrays.toString(three));
-                prevSpace = space+1;
-                space = message.indexOf(' ', prevSpace);
-                byte[] four = shortToBytes(Short.parseShort(message.substring(prevSpace,nextBackslashN)));
-                System.out.println(Arrays.toString(four) + '\n');
-                message = message.substring(nextBackslashN+1);
-                nextBackslashN = message.indexOf('\n');
-                space = message.indexOf(' ');
-                ans.add(one[0]);
-                ans.add(one[1]);
-                ans.add(two[0]);
-                ans.add(two[1]);
-                ans.add(three[0]);
-                ans.add(three[1]);
-                ans.add(four[0]);
-                ans.add(four[1]);
-                nextBackslashN = message.indexOf('\n', nextBackslashN+1);
-            } //this is some long sh!t dont open if not needed
-            // ------------------------------------
-            */
+            for (int i=0; i<x.length;i++) alwaysAdd.add(x[i]);
             return encodeStatOrLog(alwaysAdd,message);
         }
         return (message + ";").getBytes(); //uses utf8 by default

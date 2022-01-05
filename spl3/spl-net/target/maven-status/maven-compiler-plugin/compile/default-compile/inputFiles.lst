@@ -6,13 +6,13 @@
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/srv/bidi/ConnectionHandler.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/api/MyMessageEncoderDecoder.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/rci/RCIClient.java
-/home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/TCPMain.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedServerMain.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/newsfeed/PublishNewsCommand.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/rci/RemoteCommandInvocationProtocol.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/api/messageStructure.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/newsfeed/NewsFeedClientMain.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/api/connectionImpl.java
+/home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/impl/TPCMain.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/srv/NonBlockingConnectionHandler.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/api/MessagingProtocol.java
 /home/yona/Desktop/spl3Work/spl3/spl-net/src/main/java/bgu/spl/net/srv/ConnectionHandler.java

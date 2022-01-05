@@ -14,12 +14,12 @@
 
 class writeTask{
 private:
-    bool& shouldTerminate;
     ConnectionHandler &connectionHandler;
+    int& currentState;
 
 
 public:
-    writeTask(bool &shouldTerminate, ConnectionHandler &con);
+    writeTask(int& currentState, ConnectionHandler &con);
     void run();
 
 };

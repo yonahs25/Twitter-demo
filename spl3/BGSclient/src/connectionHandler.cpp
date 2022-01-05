@@ -145,7 +145,7 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
         frame = newFrame;
     }
         //error
-    else if (ch[0] == '1' && ch[1] == '1') { //TODO mistake, need to ignore 0
+    else if (ch[0] == '1' && ch[1] == '1') {
         try {
             do {
                 getBytes(&c, 1);
@@ -159,9 +159,10 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
         string opcode = frame.substr(2);
         if (opcode.at(0) == '0')
             newframe.append(1, opcode.at(1));
-        else
+        else{
+            opcode.resize(opcode.size()-1);
             newframe = newframe + opcode;
-
+        }
 
         frame = newframe;
     }
@@ -174,8 +175,7 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
             std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
             return false;
         }
-        if ((ch[1] != '7') && (ch[1] != '8')){
-            char c;
+        if ((ch[1] != '7') && (ch[1] != '8') && ch[1] !='4'){
             try {
                 do {
                     getBytes(&c, 1);
@@ -185,7 +185,6 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
                 return false;
             }
         }
-        //if (!frame.substr(2, 2).compare("01")) {
         if (ch[0] == '0' && ch[1] == '1'){
             string new_frame = "ACK 1";
             frame = new_frame;
@@ -196,7 +195,20 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
             string new_frame = "ACK 3";
             frame = new_frame;
         } else if (ch[0] == '0' && ch[1] == '4') {
-            string new_frame = "ACK 4";
+            string name;
+            try {
+                do {
+                    getBytes(&c, 1);
+                    name.append(1,c);
+                }while (c!=delimiter);
+            } catch (std::exception &e) {
+                std::cerr << "recv failed (Error: " << e.what() << ')' << std::endl;
+                return false;
+            }
+            name.resize(name.size()-1);
+            string followOrUn = name.substr(0,1);
+            name.erase(0,1);
+            string new_frame = "ACK 4 " + followOrUn + " " +name;
             frame = new_frame;
         }else if (ch[0] == '0' && ch[1] == '5') {
             string new_frame = "ACK 5";
@@ -204,6 +216,8 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
         }else if (ch[0] == '0' && ch[1] == '6') {
             string new_frame = "ACK 6";
             frame = new_frame;
+        }else if(ch[0] == '1' && ch[1] == '2'){
+            frame = "ACK 12";
         } else if (ch[0] == '0' && ch[1] == '7') {
             string alwaysAdd = "ACK 07 ";
             string ans;
@@ -310,8 +324,6 @@ bool ConnectionHandler::getFrameAscii(std::string &frame, char delimiter) {
             frame = ans;
         }
     }
-
-
     return true;
 }
 
@@ -383,7 +395,7 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             for (int i = 0; i < password.size() + 1; i++) {
                 final[j] = second[i];
                 j++;
-            } //[02username 0 password 1]
+            }
             final[size - 1] = captcha;
             sent = sendBytes(final, size);
 
@@ -393,8 +405,6 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             string followOrUnfollow = frame.substr(7, 1);
             string username = frame.substr(9);
             string final = Opcode + followOrUnfollow + username;
-            // aaaaa 5
-            // [a a a a a 0] 6
             sent = sendBytes(final.c_str(), final.size());
 
             //need to send
@@ -424,7 +434,6 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
                 final[j] = third[i];
                 j++;
             }
-            cout <<final<< endl;
 
             sent = sendBytes(final, size);
 
@@ -433,7 +442,6 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             string usernames = frame.substr(5);
             string final = Opcode + usernames;
             sent = sendBytes(final.c_str(), final.size() + 1);
-            // STAT aa|BB|CC
         } else if (!op.compare("BLOCK")) {
             string Opcode = "12";
             string username = frame.substr(6);
@@ -448,7 +456,6 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
 
 
     }
-    //bool result=sendBytes(frame.c_str(),frame.length());
     if (!sent) return false;
     return sendBytes(&delimiter, 1);
 }

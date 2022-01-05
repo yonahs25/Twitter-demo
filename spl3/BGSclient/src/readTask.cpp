@@ -6,23 +6,24 @@
 #include <string>
 using namespace std;
 
-readTask::readTask(bool &shouldTerminate, ConnectionHandler &con):shouldTerminate(shouldTerminate), connectionHandler(con)
+readTask::readTask(int &currentState, ConnectionHandler &con):currentState(currentState), connectionHandler(con)
         {};
 
 void readTask::run() {
-        while(true){
+        while(currentState == 2){
             string answer;
 
             if (!connectionHandler.getLine(answer)) {
                 std::cout << "Disconnected. Exiting...\n" << std::endl;
                 break;
             }
-            //int len=answer.length();
-//            answer.resize(len-1);
+
             cout<< answer << endl;
             if(answer == "ACK 3")
-                terminate();
-
+//                terminate();
+                currentState = 3;
+            else if(answer == "ERROR 3")
+                currentState = 2;
 
         }
 
