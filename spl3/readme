@@ -1,18 +1,20 @@
 how to run project:
 
 - TPC server:
+cd Server
 mvn clean
 mvn compile
-mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.TPCMain" -Dexec.args="7777"
+mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.BGSserver.TPCMain" -Dexec.args="7777"
 
 - Reactor
-
+cd Server
 mvn clean
 mvn compile
-mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.ReactorMain" -Dexec.args="7777 5"
+mvn exec:java -Dexec.mainClass="bgu.spl.net.impl.BGSserver.ReactorMain" -Dexec.args="7777 5"
 
 
 - client
+cd Client
 make clean
 make
 ./bin/BGSclient 127.0.0.1 7777

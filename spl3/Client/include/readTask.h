@@ -11,8 +11,9 @@
 
 class readTask{
 private:
-    ConnectionHandler &connectionHandler;
     int& currentState;
+    ConnectionHandler &connectionHandler;
+
 
 
 

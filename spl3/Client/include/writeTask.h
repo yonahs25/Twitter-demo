@@ -14,8 +14,9 @@
 
 class writeTask{
 private:
-    ConnectionHandler &connectionHandler;
     int& currentState;
+    ConnectionHandler &connectionHandler;
+
 
 
 public:

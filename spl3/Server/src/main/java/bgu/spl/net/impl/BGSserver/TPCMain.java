@@ -1,4 +1,4 @@
-package bgu.spl.net.impl;
+package bgu.spl.net.impl.BGSserver;
 
 import bgu.spl.net.api.BidiProtocol;
 import bgu.spl.net.api.MyMessageEncoderDecoder;

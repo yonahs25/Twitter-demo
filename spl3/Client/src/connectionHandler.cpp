@@ -360,20 +360,21 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             const char *third = dateOfBirth.c_str(); // [25-10-1996 0]
             int size = OpAndUser.size() + password.size() + dateOfBirth.size() + 3;
             char final[size];
-            for (int i = 0; i < OpAndUser.size() + 1; i++) {
+            for (int i = 0; i < (int)OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
             }
             int j = OpAndUser.size() + 1;
-            for (int i = 0; i < password.size() + 1; i++) {
+            for (int i = 0; i < (int)password.size() + 1; i++) {
                 final[j] = second[i];
                 j++;
             }
             j = OpAndUser.size() + 2 + password.size();
-            for (int i = 0; i < dateOfBirth.size() + 1; i++) {
+            for (int i = 0; i < (int)dateOfBirth.size() + 1; i++) {
                 final[j] = third[i];
                 j++;
             }
             sent = sendBytes(final, size);
+
 
         } else if (!op.compare("LOGIN")) {
             int space2 = frame.find_first_of(' ', space + 1);
@@ -388,11 +389,11 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             const char *second = password.c_str(); //[password 0]
             int size = OpAndUser.size() + password.size() + 3;
             char *final = new char[size];
-            for (int i = 0; i < OpAndUser.size() + 1; i++) {
+            for (int i = 0; i < (int)OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
             }
             int j = OpAndUser.size() + 1;
-            for (int i = 0; i < password.size() + 1; i++) {
+            for (int i = 0; i < (int)password.size() + 1; i++) {
                 final[j] = second[i];
                 j++;
             }
@@ -421,21 +422,22 @@ bool ConnectionHandler::sendFrameAscii(const std::string &frame, char delimiter)
             const char *third = dateAndTime.c_str();
             int size = OpAndUser.size() + content.size() + dateAndTime.size() +3;
             char final[size];
-            for (int i = 0; i < OpAndUser.size() + 1; i++) {
+            for (int i = 0; i < (int)OpAndUser.size() + 1; i++) {
                 final[i] = first[i];
             }
             int j = OpAndUser.size() + 1;
-            for (int i = 0; i < content.size() + 1; i++) {
+            for (int i = 0; i < (int)content.size() + 1; i++) {
                 final[j] = second[i];
                 j++;
             } //[02username 0 password 1]
             j = OpAndUser.size() + 2 + content.size();
-            for (int i = 0; i < dateAndTime.size() + 1; i++) {
+            for (int i = 0; i < (int)dateAndTime.size() + 1; i++) {
                 final[j] = third[i];
                 j++;
             }
 
             sent = sendBytes(final, size);
+
 
         } else if (!op.compare("STAT")) {
             string Opcode = "08";
