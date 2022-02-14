@@ -5,7 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="feab7b83-20a3-4cee-b8e6-22e630d9e35c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Client/bin/BGSclient" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/bin/BGSclient" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/bin/BGSclient.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/bin/BGSclient.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/bin/connectionHandler.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/bin/connectionHandler.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/bin/readTask.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/bin/readTask.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/bin/writeTask.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/bin/writeTask.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/include/readTask.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/include/readTask.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/include/writeTask.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/include/writeTask.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Client/src/connectionHandler.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Client/src/connectionHandler.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/ReactorMain.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgu/spl/net/impl/TPCMain.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,6 +162,7 @@
       <workItem from="1641401168039" duration="3192000" />
       <workItem from="1641406364908" duration="647000" />
       <workItem from="1641480619105" duration="101000" />
+      <workItem from="1641735834979" duration="453000" />
     </task>
     <servers />
   </component>
